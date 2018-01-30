@@ -1,0 +1,11 @@
+Include/
+Lib/
+Scripts/
+tcl/
+
+bin/
+lib/
+include/
+.idea/
+pip-selfcheck.json
+
