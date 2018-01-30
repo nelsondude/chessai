@@ -1,6 +1,6 @@
-from .views import aiView
+from .views import AiView
 from django.urls import path
 
 urlpatterns = [
-	path('', aiView)
+	path('', AiView.as_view())
 ]
