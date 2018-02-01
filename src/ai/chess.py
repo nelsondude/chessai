@@ -1,5 +1,6 @@
 import math
 import copy
+import random
 
 def myDeepCopy(a):
     if (isinstance(a, list) or isinstance(a, tuple)):
@@ -10,19 +11,26 @@ def myDeepCopy(a):
 def getRowCol(coors1, coors2):
     return [coors1['row'], coors1['col'], coors2['row'], coors2['col']]
 
-def isLegal(board, coors1, coors2):
+def outOfBounds(row, col):
+    return row < 0 or row > 7 or col < 0 or col > 7
+
+
+def legalPieceChecks(board, coors1, coors2):
     curRow, curCol, newRow, newCol = getRowCol(coors1, coors2)
     piece = board[curRow][curCol]
+    if not piece:
+        return False
+
     name = piece['name']
-    legal = False
+
+    if (outOfBounds(newRow, newCol)):
+        return False
 
     if (isSameSide(board, coors1, coors2)):
         return False
 
-    if (name != 'knight' and isBlocked(board, coors1, coors2)):
-        return False
 
-
+    legal = False
     if (name == 'knight'):
         legal = isLegalKnight(coors1, coors2)
     elif (name == 'queen'):
@@ -36,31 +44,84 @@ def isLegal(board, coors1, coors2):
     elif (name == 'king'):
         legal = isLegalKing(coors1, coors2) or isLegalCastle(board, coors1, coors2)
 
+    if (legal and name != 'knight' and isBlocked(board, coors1, coors2)):
+        return False
+
+    return legal
+
+def getRandomMove(board, color):
+    moves = getAllMoves(board, color)
+    random_move = random.choice(moves)
+    print(random_move)
+    temp = createTempBoard(board, random_move['coors1'], random_move['coors2'])
+    return temp
+
+def getAllMoves(board, color):
+    moves = []
+    for i in range(len(board)):
+        for j in range(len(board)):
+            square = board[i][j]
+            if (square and square['color'] == color):
+                coors1 = {'row': i, 'col': j}
+                legalMoves = getLegalMovesForPiece(board, coors1)
+                if (len(legalMoves) > 0):
+                    moves.extend(legalMoves)
+    return moves
+
+
+def getLegalMovesForPiece(board, coors1):
+    moves = []
+    for i in range(len(board)):
+        for j in range(len(board)):
+            coors2 = {'row': i, 'col': j}
+            if isLegal(board, coors1, coors2):
+                moves.append({'coors1': coors1, 'coors2': coors2})
+    return moves
+
+def isLegal(board, coors1, coors2):
+    legal = legalPieceChecks(board, coors1, coors2)
 
     if legal:
+        curRow, curCol, newRow, newCol = getRowCol(coors1, coors2)
+        piece = board[curRow][curCol]
         tempBoard = createTempBoard(board, coors1, coors2)
         legal = not isColorInCheck(tempBoard, piece['color'])
-
 
     # 1. Does the move put the current player in check?
     # 2. Does the move go through any piece? NA for Knight
     # 3. Does the move go on the same color piece
-    # 4. Does the move go out of bounds
 
     return legal
 
-def isColorInCheck(board, color):
+def isColorInCheck(tempBoard, color):
+    coors2 = getCoorsFromNameColor(tempBoard, 'king', color)
     color2 = getOtherColor(color)
-    # for row in range(len(board)):
-    #     for square in range(len(row)):
-    #         if (square and square['color'] == color2):
-    #
-    #
-
+    for i in range(len(tempBoard)):
+        row = tempBoard[i]
+        for j in range(len(row)):
+            square = row[j]
+            if (square and square['color'] == color2):
+                coors1 = {'row': i, 'col': j}
+                if legalPieceChecks(tempBoard, coors1, coors2):
+                    return True
     return False
 
+def getCoorsFromNameColor(board, name, color):
+    for i in range(len(board)):
+        row = board[i]
+        for j in range(len(row)):
+            square = row[j]
+            if (square and square['name'] == name and square['color'] == color):
+                return {'row': i, 'col': j}
+    return None
+
 def createTempBoard(board, coors1, coors2):
-    return myDeepCopy(board)
+    temp = myDeepCopy(board)
+    curRow, curCol, newRow, newCol = getRowCol(coors1, coors2)
+    piece = temp[curRow][curCol]
+    temp[curRow][curCol] = None
+    temp[newRow][newCol] = piece
+    return temp
 
 def isBlocked(board, coors1, coors2):
     result = False
@@ -112,7 +173,6 @@ def isHorizontalMove(coors1, coors2):
 
 def isDiagonalMove(coors1, coors2):
     rowDif, colDif = getRowColDif(coors1, coors2)
-    print(rowDif, colDif)
     return (rowDif == colDif)
 
 def isMovingForward(board, coors1, coors2):
@@ -159,7 +219,7 @@ def isLegalPawn(board, coors1, coors2):
     return False
 
 def isLegalRook(coors1, coors2):
-    return (isHorizontalMove(coors1, coors2) or
+    return (isHorizontalMove(coors1, coors2) ^
 			isVerticalMove(coors1, coors2))
 
 def isLegalQueen(coors1, coors2):
