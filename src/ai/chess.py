@@ -10,17 +10,17 @@ def isLegal(board, coors1, coors2):
     legal = False
 
     if (name == 'knight'):
-    	legal = isLegalKnight(coors1, coors2)
+        legal = isLegalKnight(coors1, coors2)
     elif (name == 'queen'):
-    	legal = isLegalQueen(coors1, coors2)
+        legal = isLegalQueen(coors1, coors2)
     elif (name == 'bishop'):
-    	legal = isLegalBishop(coors1, coors2)
+        legal = isLegalBishop(coors1, coors2)
     elif (name == 'rook'):
-    	legal = isLegalRook(coors1, coors2)
+        legal = isLegalRook(coors1, coors2)
     elif (name == 'pawn'):
-    	legal = isLegalPawn()
+        legal = isLegalPawn()
     elif (name == 'king'):
-    	legal = isLegalKing(coors1, coors2)
+        legal = isLegalKing(coors1, coors2)
     print(piece)
 
     # 1. Does the move put the current player in check?
@@ -31,41 +31,40 @@ def isLegal(board, coors1, coors2):
     return legal
 
 def getRowColDif(coors1, coors2):
-	rowDif = abs(coors1['row'] - coors2['row'])
-	colDif = abs(coors1['col'] - coors2['col'])
-	return [rowDif, colDif]
+    rowDif = abs(coors1['row'] - coors2['row'])
+    colDif = abs(coors1['col'] - coors2['col'])
+    return [rowDif, colDif]
 
 def isVerticalMove(coors1, coors2):
-	return (coors1['col'] == coors2['col'])
+    return (coors1['col'] == coors2['col'])
 
 def isHorizontalMove(coors1, coors2):
-	return (coors1['row'] == coors2['row'])
+    return (coors1['row'] == coors2['row'])
 
 def isDiagonalMove(coors1, coors2):
-	rowDif, colDif = getRowColDif(coors1, coors2)
-	return (rowDif == colDif)
+    rowDif, colDif = getRowColDif(coors1, coors2)
+    return (rowDif == colDif)
 
 
 # Piece Legal Functions
 def isLegalKnight(coors1, coors2):
-	rowDif, colDif = getRowColDif(coors1, coors2)
-	return (max(rowDif, colDif) == 3 and min(rowDif, colDif) == 2)
+    rowDif, colDif = getRowColDif(coors1, coors2)
+    return (max(rowDif, colDif) == 3 and min(rowDif, colDif) == 2)
 
 def isLegalPawn():
-	return True
+    return True
 
 def isLegalRook(coors1, coors2):
-	return (isHorizontalMove(coors1, coors2) or 
+    return (isHorizontalMove(coors1, coors2) or
 			isVerticalMove(coors1, coors2))
 
 def isLegalQueen(coors1, coors2):
-	return (isLegalBishop(coors1, coors2) or 
+    return (isLegalBishop(coors1, coors2) or
 			isLegalRook(coors1, coors2))
 
 def isLegalKing(coors1, coors2):
-	rowDif, colDif = getRowColDif(coors1, coors2)
-	return (rowDif <= 1 and colDif <= 1)
+    rowDif, colDif = getRowColDif(coors1, coors2)
+    return (rowDif <= 1 and colDif <= 1)
 
 def isLegalBishop(coors1, coors2):
-	return isDiagonalMove(coors1, coors2)
-
+    return isDiagonalMove(coors1, coors2)
