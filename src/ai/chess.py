@@ -32,14 +32,14 @@ def isLegal(board, coors1, coors2):
     elif (name == 'rook'):
         legal = isLegalRook(coors1, coors2)
     elif (name == 'pawn'):
-        legal = isLegalPawn()
+        legal = isLegalPawn(board, coors1, coors2)
     elif (name == 'king'):
         legal = isLegalKing(coors1, coors2) or isLegalCastle(board, coors1, coors2)
 
 
     if legal:
         tempBoard = createTempBoard(board, coors1, coors2)
-        legal = not inCheck(tempBoard)
+        legal = not isColorInCheck(tempBoard, piece['color'])
 
 
     # 1. Does the move put the current player in check?
@@ -49,7 +49,14 @@ def isLegal(board, coors1, coors2):
 
     return legal
 
-def inCheck(board):
+def isColorInCheck(board, color):
+    color2 = getOtherColor(color)
+    # for row in range(len(board)):
+    #     for square in range(len(row)):
+    #         if (square and square['color'] == color2):
+    #
+    #
+
     return False
 
 def createTempBoard(board, coors1, coors2):
@@ -79,8 +86,11 @@ def isBlocked(board, coors1, coors2):
 def isLegalCastle(board, coors1, coors2):
     return False
 
+def getPiece(board, coors):
+    return board[coors['row']][coors['col']]
+
 def isSameSide(board, coors1, coors2):
-    piece = board[coors1['row']][coors1['col']]
+    piece = getPiece(board, coors1)
     color = piece['color']
     next = board[coors2['row']][coors2['col']]
     if (next):
@@ -102,16 +112,51 @@ def isHorizontalMove(coors1, coors2):
 
 def isDiagonalMove(coors1, coors2):
     rowDif, colDif = getRowColDif(coors1, coors2)
+    print(rowDif, colDif)
     return (rowDif == colDif)
 
+def isMovingForward(board, coors1, coors2):
+    piece = getPiece(board, coors1)
+    if (piece['color'] == 'dark'):
+        return coors2['row'] > coors1['row']
+    else:
+        return coors1['row'] > coors2['row']
 
 # Piece Legal Functions
 def isLegalKnight(coors1, coors2):
     rowDif, colDif = getRowColDif(coors1, coors2)
     return (max(rowDif, colDif) == 2 and min(rowDif, colDif) == 1)
 
-def isLegalPawn():
-    return True
+def isPieceOfColor(board, coors, color):
+    piece = getPiece(board, coors)
+    if (piece):
+        return piece['color'] == color
+    return False
+
+def isPieceAtCoors(board, coors):
+    return board[coors['row']][coors['col']] != None
+
+def getOtherColor(color):
+    return 'light' if color == 'dark' else 'dark'
+
+
+def isLegalPawn(board, coors1, coors2):
+    rowDif, colDif = getRowColDif(coors1, coors2)
+    piece = getPiece(board, coors1)
+    if not isMovingForward(board, coors1, coors2):
+        return False
+    if isDiagonalMove(coors1, coors2):
+        diagGood = isPieceOfColor(board, coors2, getOtherColor(piece['color']))
+        if (rowDif != 1 or colDif != 1 or not diagGood):
+            return False
+        return True
+    if isVerticalMove(coors1, coors2) and not isPieceAtCoors(board, coors2):
+        if (coors1['row'] == 1 or coors1['row'] == 6):
+            return rowDif <= 2
+        else:
+            return rowDif <= 1
+
+    return False
 
 def isLegalRook(coors1, coors2):
     return (isHorizontalMove(coors1, coors2) or
