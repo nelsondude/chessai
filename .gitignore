@@ -13,3 +13,5 @@ chessai.sublime-project
 chessai.sublime-workspace
 db.sqlite3
 __pycache__/
+
+.Python

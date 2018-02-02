@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from .utils import print2dList
-from .chess import isLegal, getRandomMove
+from .chess import isLegal, getRandomMove, getBestMove, modifyLegalBoard
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -25,8 +25,9 @@ class AiView(BaseView):
 
 	def post(self, request, *args, **kwargs):
 		data = self.getData(request)
-		color = random.choice(['dark', 'light'])
-		newBoard = getRandomMove(data, color)
+		board = data.get('board')
+		turn = data.get('turn')
+		newBoard = getBestMove(board, turn)
 		return HttpResponse(json.dumps(newBoard))
 
 
@@ -38,11 +39,11 @@ class LegalView(BaseView):
 		data = self.getData(request)
 
 		board = data.get('board')
-		piece = data.get('piece')
-		coors = data.get('coors')
-		newCoors = data.get('newCoors')
-		legal = isLegal(board, coors, newCoors)
-		result = {'legal': legal}
+		coors1 = data.get('coors')
+		coors2 = data.get('newCoors')
+		legal = isLegal(board, coors1, coors2)
+		newBoard = modifyLegalBoard(board, coors1, coors2) if legal else board
+		result = {'legal': legal, 'board': newBoard}
 
 		# print2dList(board)
 		return HttpResponse(json.dumps(result))

@@ -8,6 +8,103 @@ def myDeepCopy(a):
     else:
         return copy.copy(a)
 
+'''
+
+
+# Class Based Implementation
+class Chess(object):
+    def __init__(self, board, coors1, coors2):
+        self.coors1 = coors1
+        self.coors2 = coors2
+        self.board = board
+
+    def getRowCol(self):
+        return [self.coors1['row'], self.coors1['col'], self.coors2['row'], self.coors2['col']]
+
+
+    def outOfBounds(self):
+        row = self.coors2['row']
+        col = self.coors2['col']
+        return row < 0 or row > 7 or col < 0 or col > 7
+
+    def legalPieceChecks(self):
+        curRow, curCol, newRow, newCol = self.getRowCol()
+        piece = self.board[curRow][curCol]
+        if not piece:
+            return False
+
+        name = piece['name']
+        if (outOfBounds()):
+            return False
+        if (isSameSide()):
+            return False
+        legal = False
+        if (name == 'knight'):
+            legal = isLegalKnight()
+        elif (name == 'queen'):
+            legal = isLegalQueen()
+        elif (name == 'bishop'):
+            legal = isLegalBishop()
+        elif (name == 'rook'):
+            legal = isLegalRook()
+        elif (name == 'pawn'):
+            legal = isLegalPawn()
+        elif (name == 'king'):
+            legal = isLegalKing() or isLegalCastle()
+
+        if (legal and name != 'knight' and isBlocked()):
+            return False
+
+        return legal
+
+
+    def isSameSide(self):
+        piece = getPiece(self.board, self.coors1)
+        color = piece['color']
+        next = self.board[self.coors2['row']][self.coors2['col']]
+        if (next):
+            next_color = next.get('color')
+            if (next_color == color):
+                return True
+        return False
+
+    def isLegalKnight(self):
+        rowDif, colDif = self.getRowColDif()
+        return (max(rowDif, colDif) == 2 and min(rowDif, colDif) == 1)
+
+    # CHESS UTILITIES / Get Directions for LEGAL FUNCTIONS
+    def getRowColDif(self):
+        rowDif = abs(self.coors1['row'] - self.coors2['row'])
+        colDif = abs(self.coors1['col'] - self.coors2['col'])
+        return [rowDif, colDif]
+
+    def isVerticalMove(self):
+        return (self.coors1['col'] == self.coors2['col'])
+
+    def isHorizontalMove(self):
+        return (self.coors1['row'] == self.coors2['row'])
+
+    def isDiagonalMove(self):
+        rowDif, colDif = getRowColDif()
+        return (rowDif == colDif)
+
+    def isMovingForward(self):
+        piece = self.getPiece(self.coors1)
+        if (piece['color'] == 'dark'):
+            return self.coors2['row'] > self.coors1['row']
+        else:
+            return self.coors1['row'] > self.coors2['row']
+
+
+    def getPiece(self, coors):
+        return self.board[coors['row']][coors['col']]
+
+'''
+
+
+#________________________________________________
+
+
 def getRowCol(coors1, coors2):
     return [coors1['row'], coors1['col'], coors2['row'], coors2['col']]
 
@@ -29,7 +126,6 @@ def legalPieceChecks(board, coors1, coors2):
     if (isSameSide(board, coors1, coors2)):
         return False
 
-
     legal = False
     if (name == 'knight'):
         legal = isLegalKnight(coors1, coors2)
@@ -42,17 +138,50 @@ def legalPieceChecks(board, coors1, coors2):
     elif (name == 'pawn'):
         legal = isLegalPawn(board, coors1, coors2)
     elif (name == 'king'):
-        legal = isLegalKing(coors1, coors2) or isLegalCastle(board, coors1, coors2)
+        legal = isLegalKing(coors1, coors2)
 
     if (legal and name != 'knight' and isBlocked(board, coors1, coors2)):
         return False
 
     return legal
 
+def getBestMove(board, color):
+    moves = getAllMoves(board, color)
+    current_points = getPoints(board, color)
+    best = -100
+    best_boards = []
+    for move in moves:
+        temp = createTempBoard(board, move['coors1'], move['coors2'])
+        secondMoves = getAllMoves(temp, getOtherColor(color))
+        for secondMove in secondMoves:
+            secondTemp = createTempBoard(temp, secondMove['coors1'], secondMove['coors2'])
+            points = getPoints(secondTemp, color)
+
+            dif = points - current_points
+            if dif > best:
+                best = dif
+                best_boards = [temp]
+            elif dif == best:
+                best_boards.append(temp)
+
+    return random.choice(best_boards) if len(best_boards)>0 else board
+
+
+def getPoints(board, color):
+    total = 0
+    for row in board:
+        for square in row:
+            if (square):
+                if square['color'] == color:
+                    total += square['value']
+                else:
+                    total -= square['value']
+    return total
+
+
 def getRandomMove(board, color):
     moves = getAllMoves(board, color)
     random_move = random.choice(moves)
-    print(random_move)
     temp = createTempBoard(board, random_move['coors1'], random_move['coors2'])
     return temp
 
@@ -67,6 +196,9 @@ def getAllMoves(board, color):
                 if (len(legalMoves) > 0):
                     moves.extend(legalMoves)
     return moves
+
+def getNumLegalMoves(board, color):
+    return len(getAllMoves(board, color))
 
 
 def getLegalMovesForPiece(board, coors1):
@@ -91,7 +223,14 @@ def isLegal(board, coors1, coors2):
     # 2. Does the move go through any piece? NA for Knight
     # 3. Does the move go on the same color piece
 
-    return legal
+    return legal or isLegalCastle(board, coors1, coors2)
+
+def modifyLegalBoard(board, coors1, coors2):
+    castle = isLegalCastle(board, coors1, coors2)
+    if (castle):
+        return castle
+    return createTempBoard(board, coors1, coors2)
+
 
 def isColorInCheck(tempBoard, color):
     coors2 = getCoorsFromNameColor(tempBoard, 'king', color)
@@ -119,6 +258,7 @@ def createTempBoard(board, coors1, coors2):
     temp = myDeepCopy(board)
     curRow, curCol, newRow, newCol = getRowCol(coors1, coors2)
     piece = temp[curRow][curCol]
+    if piece: piece['moved'] = True
     temp[curRow][curCol] = None
     temp[newRow][newCol] = piece
     return temp
@@ -145,7 +285,34 @@ def isBlocked(board, coors1, coors2):
     return result
 
 def isLegalCastle(board, coors1, coors2):
-    return False
+    # king side castle:
+    # two squares must be empty
+    # Check to see if king is blocked by going to the corner
+    # King and Rook have already moved
+    rowDif, colDif = getRowColDif(coors1, coors2)
+    piece = getPiece(board, coors1)
+
+    if (colDif != 2 or rowDif != 0):
+        return False
+    if (piece['name'] != 'king'):
+        return False
+    if piece and piece['moved'] == True:
+        return False
+
+    corner = {'row': 7, 'col': 7}
+    rookMove = {'row': 7, 'col': 5}
+    piece2 = getPiece(board, corner)
+    if piece2 and piece2['moved'] == True:
+        return False
+    if isBlocked(board, coors1, corner):
+        return False
+
+    mod1 = createTempBoard(board, coors1, coors2);
+    mod2 = createTempBoard(mod1, corner, rookMove)
+
+    return mod2
+
+
 
 def getPiece(board, coors):
     return board[coors['row']][coors['col']]
