@@ -152,43 +152,58 @@ def legalPieceChecks(board, coors1, coors2):
 
 # class method
 # Make recursive
-def getBestMove(board, color, depth=1):
+def minimaxRoot(board, color, isMaximisingPlayer, depth):
     moves = getAllMoves(board, color)
-    current_points = getPoints(board, color)
-    best = -1000
-    boards = []
-    for move in moves:
+    bestMove = -9999
+    bestMovesFound = []
+    bestMoveFound = moves[0]
+    for i in range(len(moves)):
+        move = moves[i]
         temp = createTempBoard(board, move['coors1'], move['coors2'])
-        boards.append(temp)
-        # points = getPoints(temp, color)
-        # if points > best:
-        #     boards = [temp]
-        #     best = points
-        # if points == best:
-        #     boards.append(temp)
+        value = minimax(depth - 1, board, color, -10000, 10000, not isMaximisingPlayer)
+        # if (value >= bestMove):
+        #     bestMove = value
+        #     bestMoveFound = move
+        if (value == bestMove):
+            bestMove = value
+            bestMovesFound.append(move)
+        elif (value > bestMove):
+            bestMove = value
+            bestMovesFound = [move]
+    # return bestMoveFound
+    return random.choice(bestMovesFound)
 
-    # All possible moves
-    for board in boards:
-        moves = getAllMoves(board, getOtherColor(color))
-        for move in moves:
+
+# Minimax Method with alpha beta pruning
+def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
+    if depth == 0:
+        return getPoints(board, color)
+    moves = getAllMoves(board, color)
+    if isMaximisingPlayer:
+        bestMove = -9999
+        for i in range(len(moves)):
+            move = moves[i]
             temp = createTempBoard(board, move['coors1'], move['coors2'])
-            points = getPoints(temp, color)
-            if points > best:
-                boards = [temp]
-                best = points
-            if points == best:
-                boards.append(temp)
+            bestMove = max(bestMove, minimax(depth - 1, board, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
+            alpha = max(alpha, bestMove)
+            if (beta <= alpha):
+                return bestMove
+        return bestMove
+    else:
+        bestMove = 9999
+        for i in range(len(moves)):
+            move = moves[i]
+            bestMove = min(bestMove, minimax(depth - 1, board, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
+            beta = min(beta, bestMove)
+            if (beta <= alpha):
+                return bestMove
+        return bestMove
 
-        # boards.append(temp)
 
-        # if depth > 0:
-        #     points = getBestMove(temp, getOtherColor(color), depth=depth - 1)
-        #     space = '      ' * depth
-        #     print(space, points)
-        # else:
-        #     return getPoints(temp, color)
+def getBestMove(board, color, depth):
+    move = minimaxRoot(board, color, True, depth)
 
-    return random.choice(boards) if len(boards)>0 else board
+    return createTempBoard(board, move['coors1'], move['coors2'])
 
 
 

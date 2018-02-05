@@ -27,7 +27,8 @@ class AiView(BaseView):
 		data = self.getData(request)
 		board = data.get('board')
 		turn = data.get('turn')
-		newBoard = getRandomMove(board, turn)
+		depth = 3
+		newBoard = getBestMove(board, turn, depth)
 		return HttpResponse(json.dumps(newBoard))
 
 
