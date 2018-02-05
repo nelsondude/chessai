@@ -27,7 +27,7 @@ class AiView(BaseView):
 		data = self.getData(request)
 		board = data.get('board')
 		turn = data.get('turn')
-		newBoard = getBestMove(board, turn)
+		newBoard = getRandomMove(board, turn)
 		return HttpResponse(json.dumps(newBoard))
 
 
@@ -41,6 +41,7 @@ class LegalView(BaseView):
 		board = data.get('board')
 		coors1 = data.get('coors')
 		coors2 = data.get('newCoors')
+
 		legal = isLegal(board, coors1, coors2)
 		newBoard = modifyLegalBoard(board, coors1, coors2) if legal else board
 		result = {'legal': legal, 'board': newBoard}

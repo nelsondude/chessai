@@ -104,6 +104,11 @@ class Chess(object):
 
 #________________________________________________
 
+def print2D(l):
+    print('\n')
+    for row in l:
+        print(row)
+
 
 def getRowCol(coors1, coors2):
     return [coors1['row'], coors1['col'], coors2['row'], coors2['col']]
@@ -145,46 +150,68 @@ def legalPieceChecks(board, coors1, coors2):
 
     return legal
 
-def getBestMove(board, color):
+# class method
+# Make recursive
+def getBestMove(board, color, depth=1):
     moves = getAllMoves(board, color)
     current_points = getPoints(board, color)
-    best = -100
-    best_boards = []
+    best = -1000
+    boards = []
     for move in moves:
         temp = createTempBoard(board, move['coors1'], move['coors2'])
-        secondMoves = getAllMoves(temp, getOtherColor(color))
-        for secondMove in secondMoves:
-            secondTemp = createTempBoard(temp, secondMove['coors1'], secondMove['coors2'])
-            points = getPoints(secondTemp, color)
+        boards.append(temp)
+        # points = getPoints(temp, color)
+        # if points > best:
+        #     boards = [temp]
+        #     best = points
+        # if points == best:
+        #     boards.append(temp)
 
-            dif = points - current_points
-            if dif > best:
-                best = dif
-                best_boards = [temp]
-            elif dif == best:
-                best_boards.append(temp)
+    # All possible moves
+    for board in boards:
+        moves = getAllMoves(board, getOtherColor(color))
+        for move in moves:
+            temp = createTempBoard(board, move['coors1'], move['coors2'])
+            points = getPoints(temp, color)
+            if points > best:
+                boards = [temp]
+                best = points
+            if points == best:
+                boards.append(temp)
 
-    return random.choice(best_boards) if len(best_boards)>0 else board
+        # boards.append(temp)
+
+        # if depth > 0:
+        #     points = getBestMove(temp, getOtherColor(color), depth=depth - 1)
+        #     space = '      ' * depth
+        #     print(space, points)
+        # else:
+        #     return getPoints(temp, color)
+
+    return random.choice(boards) if len(boards)>0 else board
 
 
+
+# Static method
 def getPoints(board, color):
     total = 0
     for row in board:
         for square in row:
             if (square):
                 if square['color'] == color:
-                    total += square['value']
-                else:
                     total -= square['value']
+                else:
+                    total += square['value']
     return total
 
-
+# class method
 def getRandomMove(board, color):
     moves = getAllMoves(board, color)
     random_move = random.choice(moves)
     temp = createTempBoard(board, random_move['coors1'], random_move['coors2'])
     return temp
 
+# static method
 def getAllMoves(board, color):
     moves = []
     for i in range(len(board)):
@@ -197,8 +224,8 @@ def getAllMoves(board, color):
                     moves.extend(legalMoves)
     return moves
 
-def getNumLegalMoves(board, color):
-    return len(getAllMoves(board, color))
+# def getNumLegalMoves(board, color):
+#     return len(getAllMoves(board, color))
 
 
 def getLegalMovesForPiece(board, coors1):
@@ -219,16 +246,21 @@ def isLegal(board, coors1, coors2):
         tempBoard = createTempBoard(board, coors1, coors2)
         legal = not isColorInCheck(tempBoard, piece['color'])
 
+        # Checks to see if tempboard has check once moved
+
+    # castle_board = isLegalCastle(board, coors1, coors2)
+    # if (castle_board)
     # 1. Does the move put the current player in check?
     # 2. Does the move go through any piece? NA for Knight
     # 3. Does the move go on the same color piece
 
-    return legal or isLegalCastle(board, coors1, coors2)
+    return legal
 
 def modifyLegalBoard(board, coors1, coors2):
-    castle = isLegalCastle(board, coors1, coors2)
-    if (castle):
-        return castle
+    # board = isLegalCastle(board, coors1, coors2)
+    # piece = getPiece(board, coors1)
+    # if (castle and not isColorInCheck(castle, piece['color'])):
+    #     return castle
     return createTempBoard(board, coors1, coors2)
 
 
