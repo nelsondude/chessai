@@ -156,11 +156,12 @@ def minimaxRoot(board, color, isMaximisingPlayer, depth):
     moves = getAllMoves(board, color)
     bestMove = -9999
     bestMovesFound = []
-    bestMoveFound = moves[0]
+
+    # bestMoveFound = moves[0]
     for i in range(len(moves)):
         move = moves[i]
         temp = createTempBoard(board, move['coors1'], move['coors2'])
-        value = minimax(depth - 1, board, color, -10000, 10000, not isMaximisingPlayer)
+        value = minimax(depth - 1, temp, getOtherColor(color), -10000, 10000, not isMaximisingPlayer)
         # if (value >= bestMove):
         #     bestMove = value
         #     bestMoveFound = move
@@ -171,7 +172,7 @@ def minimaxRoot(board, color, isMaximisingPlayer, depth):
             bestMove = value
             bestMovesFound = [move]
     # return bestMoveFound
-    return random.choice(bestMovesFound)
+    return random.choice(bestMovesFound) if len(moves) > 0 else None
 
 
 # Minimax Method with alpha beta pruning
@@ -184,7 +185,7 @@ def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
         for i in range(len(moves)):
             move = moves[i]
             temp = createTempBoard(board, move['coors1'], move['coors2'])
-            bestMove = max(bestMove, minimax(depth - 1, board, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
+            bestMove = max(bestMove, minimax(depth - 1, temp, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
             alpha = max(alpha, bestMove)
             if (beta <= alpha):
                 return bestMove
@@ -193,7 +194,8 @@ def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
         bestMove = 9999
         for i in range(len(moves)):
             move = moves[i]
-            bestMove = min(bestMove, minimax(depth - 1, board, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
+            temp = createTempBoard(board, move['coors1'], move['coors2'])
+            bestMove = min(bestMove, minimax(depth - 1, temp, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
             beta = min(beta, bestMove)
             if (beta <= alpha):
                 return bestMove
@@ -202,8 +204,12 @@ def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
 
 def getBestMove(board, color, depth):
     move = minimaxRoot(board, color, True, depth)
+    newBoard = createTempBoard(board, move['coors1'], move['coors2']) if move else board
 
-    return createTempBoard(board, move['coors1'], move['coors2'])
+    return {
+        'board': newBoard,
+        'mate': move == None
+    }
 
 
 
