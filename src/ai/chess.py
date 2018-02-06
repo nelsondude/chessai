@@ -1,6 +1,8 @@
 import math
 import copy
 import random
+import multiprocessing as mp
+
 
 def myDeepCopy(a):
     if (isinstance(a, list) or isinstance(a, tuple)):
@@ -152,34 +154,86 @@ def legalPieceChecks(board, coors1, coors2):
 
 # class method
 # Make recursive
+
+
+depth4 = 0
+depth3 = 0
+depth2 = 0
+depth1 = 0
+depth0 = 0
+
+output = mp.Queue()
+
 def minimaxRoot(board, color, isMaximisingPlayer, depth):
+    # global depth4, depth3, depth2, depth1, depth0, output
     moves = getAllMoves(board, color)
+    # depth4 += len(moves)
+    
     bestMove = -9999
     bestMovesFound = []
 
-    # bestMoveFound = moves[0]
+    # processes = []
+
     for i in range(len(moves)):
+
         move = moves[i]
         temp = createTempBoard(board, move['coors1'], move['coors2'])
         value = minimax(depth - 1, temp, getOtherColor(color), -10000, 10000, not isMaximisingPlayer)
-        # if (value >= bestMove):
-        #     bestMove = value
-        #     bestMoveFound = move
+        # value = 0
+
+        # p = mp.Process(target=minimax, args=(depth-1, temp, getOtherColor(color), -10000, 10000, not isMaximisingPlayer))
+        # processes.append(p)
+
+        # p.start()
+        # p.join()
+
         if (value == bestMove):
             bestMove = value
             bestMovesFound.append(move)
         elif (value > bestMove):
             bestMove = value
             bestMovesFound = [move]
-    # return bestMoveFound
+
+    # for p in processes:
+    #     p.start()
+
+    # for p in processes:
+    #     p.join()
+
+    # print('DEPTH0: ', depth0 )
+    # print('DEPTH1: ', depth1 )
+    # print('DEPTH2: ', depth2 )
+    # print('DEPTH3: ', depth3 )
+    # print('DEPTH4: ', depth4 )
+    # total_count = 0
     return random.choice(bestMovesFound) if len(moves) > 0 else None
+
+
+def modifyCounts(depth, num_moves):
+    global depth4, depth3, depth2, depth1, depth0
+    if depth == 0:
+        depth0 += num_moves
+    elif depth == 1:
+        depth1 += num_moves
+    elif depth == 2:
+        depth2 += num_moves
+    elif depth == 3:
+        depth3 += num_moves
+    elif depth == 4:
+        depth4 += num_moves
 
 
 # Minimax Method with alpha beta pruning
 def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
+    # global output
+
     if depth == 0:
-        return getPoints(board, color)
+        points = getPoints(board, color)
+        return points
+
     moves = getAllMoves(board, color)
+    # modifyCounts(depth, len(moves))
+    # print('DEPTH: ', depth)
     if isMaximisingPlayer:
         bestMove = -9999
         for i in range(len(moves)):
@@ -188,7 +242,10 @@ def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
             bestMove = max(bestMove, minimax(depth - 1, temp, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
             alpha = max(alpha, bestMove)
             if (beta <= alpha):
+                # print(bestMove)
                 return bestMove
+        # print(bestMove)
+
         return bestMove
     else:
         bestMove = 9999
@@ -198,7 +255,9 @@ def minimax(depth, board, color, alpha, beta, isMaximisingPlayer):
             bestMove = min(bestMove, minimax(depth - 1, temp, getOtherColor(color), alpha, beta, not isMaximisingPlayer))
             beta = min(beta, bestMove)
             if (beta <= alpha):
+                # print(bestMove)
                 return bestMove
+        # print(bestMove)
         return bestMove
 
 
