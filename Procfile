@@ -1,0 +1,1 @@
+web: gunicorn chessai.wsgi --log-file -
