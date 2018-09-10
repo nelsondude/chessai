@@ -15,6 +15,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { Ng2DeviceDetectorModule } from 'ng2-device-detector';
 // import { MatTabsModule} from '@angular/material';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { BannerComponent } from './components/banner/banner.component';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     ChessboardComponent,
     SocketsComponent,
     AboutComponent,
-
+    BannerComponent,
   ],
   imports: [
     BrowserModule,
