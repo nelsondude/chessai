@@ -358,11 +358,12 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     const component: ChessboardComponent = this;
     /* Renderer */
     // Use canvas element in template
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.setClearColor( 0x000000, 0 );
 
     // Start Orbit Control
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
