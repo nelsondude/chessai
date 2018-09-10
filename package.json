@@ -15,7 +15,7 @@
     "nodemon": "nodemon server.js",
     "postinstall": "per-env",
     "postinstall:development": "echo Dont run build after installing",
-    "postinstall:production": "ng build --aot -prod --env=prod"
+    "postinstall:production": "npm run build"
   },
   "engines": {
     "node": "8.4.0",
