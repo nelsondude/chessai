@@ -110,3 +110,4 @@ ENV/
 dist/
 build/
 node_modules/
+static/*
