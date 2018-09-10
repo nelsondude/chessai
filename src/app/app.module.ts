@@ -17,6 +17,7 @@ import { Ng2DeviceDetectorModule } from 'ng2-device-detector';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { BannerComponent } from './components/banner/banner.component';
 import { ControlsComponent } from './components/controls/controls.component';
+import { InfoComponent } from './components/info/info.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { ControlsComponent } from './components/controls/controls.component';
     AboutComponent,
     BannerComponent,
     ControlsComponent,
+    InfoComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(#0087C3, #001B27);
-  min-height: 100vh;
 }
+
+.layout {
+  min-height: 100vh;
+  background: linear-gradient(#0087C3, #001B27);
+}
+
