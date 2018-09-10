@@ -16,6 +16,7 @@ import { Ng2DeviceDetectorModule } from 'ng2-device-detector';
 // import { MatTabsModule} from '@angular/material';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { BannerComponent } from './components/banner/banner.component';
+import { ControlsComponent } from './components/controls/controls.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { BannerComponent } from './components/banner/banner.component';
     SocketsComponent,
     AboutComponent,
     BannerComponent,
+    ControlsComponent,
   ],
   imports: [
     BrowserModule,
