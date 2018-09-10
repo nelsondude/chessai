@@ -1,0 +1,9 @@
+export var PAWN = 'pawn';
+export var ROOK = 'rook';
+export var QUEEN = 'queen';
+export var KING = 'king';
+export var BISHOP = 'bishop';
+export var KNIGHT = 'knight';
+export var LIGHT = 'light';
+export var DARK = 'dark';
+//# sourceMappingURL=vars.js.map
