@@ -1,25 +1,6 @@
-
-
-<!--<app-chessboard></app-chessboard>-->
-<nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand" routerLink="/">SayNPlay - 3D Chess</a>
-  <button (click)="toggleCollapse()" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" [@collapse]="collapse" id="navbarColor03">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/about">About</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
 <div class="container-fluid">
   <app-chessboard></app-chessboard>
   <app-sockets></app-sockets>
-
 </div>
 
 <ng4-loading-spinner> </ng4-loading-spinner>
