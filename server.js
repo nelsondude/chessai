@@ -35,14 +35,13 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const mongoUri = 'mongodb://atnelson:Buddy1009@ds155577.mlab.com:55577/saynplay';
-const devUri = 'mongodb://127.0.0.1:27017/';
+const mongoUri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@ds155577.mlab.com:55577/saynplay`;
 
 MongoClient.connect(mongoUri, (err, client) => {
   if (err) return console.log(err);
   db = client.db('saynplay');
 
-  console.log('Connected to the database');
+  console.log('Connected to MongoDB database');
   // SOCKET CONFIG
   io.on('connection', (socket) => {
     console.log(`${socket.id} just connected to socket server`);
