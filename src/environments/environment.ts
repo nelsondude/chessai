@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  domain: 'https://0.0.0.0:8000/'
+  domain: 'http://0.0.0.0:8000/'
 };
