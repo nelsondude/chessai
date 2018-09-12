@@ -1,14 +1,16 @@
 <div class="layout">
-  <app-info></app-info>
   <div class="main-content">
-    <app-banner></app-banner>
-    <app-chessboard></app-chessboard>
-    <app-controls></app-controls>
-    <app-sockets></app-sockets>
+    <div class="left-content">
+      <app-banner></app-banner>
+    </div>
+    <div class="center-content">
+      <app-chessboard></app-chessboard>
+    </div>
+    <div class="right-content">
+      <app-controls></app-controls>
+    </div>
   </div>
 </div>
 
-
+<app-sockets></app-sockets>
 <ng4-loading-spinner></ng4-loading-spinner>
-
-
