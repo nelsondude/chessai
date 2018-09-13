@@ -172,7 +172,7 @@ def correct_color_piece_moved(board, coors, turn):
 
 def is_legal(board, coors1, coors2, turn):
     if turn and not correct_color_piece_moved(board, coors1, turn):
-        return False
+        return {'legal': False, 'castle': False}
 
     cur_row, cur_col, new_row, new_col = get_row_col(coors1, coors2)
     piece = board[cur_row][cur_col]
@@ -190,10 +190,6 @@ def is_legal(board, coors1, coors2, turn):
 
 
 def modify_legal_board(board, coors1, coors2):
-    # board = is_legal_castle(board, coors1, coors2)
-    # piece = get_piece(board, coors1)
-    # if (castle and not is_color_in_check(castle, piece['color'])):
-    #     return castle
     return create_temp_board(board, coors1, coors2)
 
 
