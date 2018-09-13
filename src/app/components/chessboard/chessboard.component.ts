@@ -169,10 +169,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   }
 
   animateToNewBoard(board) {
-    // let ids = new Set([]);
     const total = _.range(0, 32);
     const ids = [];
-    this.chessService.switchTurn();
     board.forEach((row, i) => {
       row.forEach((piece, j) => {
         if (piece === null) return;
@@ -190,12 +188,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
       const obj = this.scene.getObjectByName(id);
       obj.visible = false;
     });
-
-    // this.chessService.sendBoard(this.chessService.turn);
-
-    // const set1 = new Set(ids);
-    // const set2 = new Set(_.range(0, total));
-
   }
 
   // TWEEN ANIMATIONS _____________________________________________
@@ -262,7 +254,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   movePiece(object: Object3D, pos: THREE.Vector3) {
     const coors = this.getRowColFromPos(pos);
     const newCoors: Coor = this.getRowColFromPos(object.position);
-    this.chessService.checkLegal(coors, newCoors)
+    this.chessService.doUserChessMove(coors, newCoors)
       .subscribe(
         (data) => {
           const board = data['board'];
@@ -270,6 +262,40 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
           this.chessService.updateAIGame(board);
         },
         (err) => console.log(err)
+      );
+  }
+
+  doUserMove(dragstart_pos: THREE.Vector3, dragend_pos: THREE.Vector3) {
+    const dragstart_coors = this.getRowColFromPos(dragstart_pos);
+    const dragend_coors = this.getRowColFromPos(dragend_pos);
+    this.chessService.doUserChessMove(dragstart_coors, dragend_coors)
+      .subscribe(
+        (data) => {
+          const board = data['board'];
+          const legal = data['legal'];
+          if (!legal) {
+            this.animateToNewBoard(board);
+            // Dont Switch turn since not legal move
+            // Show not valid move error
+          } else if (this.chessService.isAIMode()) {
+            this.animateToNewBoard(board);
+            this.chessService.setBoard(board);
+            this.chessService.switchTurn();
+            this.chessService.doAIChessMove()
+              .subscribe(
+                (data) => {
+                  const ai_board = data['board'];
+                  const mate = data['mate'];
+                  this.animateToNewBoard(ai_board);
+                  this.chessService.setBoard(ai_board);
+                  this.chessService.switchTurn();
+                  if (mate) {
+                    console.log(mate);
+                  }
+                }
+              )
+          }
+        }
       );
   }
 
@@ -359,7 +385,9 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
       if (this.controls) {
         this.controls.enabled = true;
       }
-      this.movePiece(event.object, this.piecePos);
+      const dragstart_pos = this.piecePos;
+      const dragend_pos = event.object.position;
+      this.doUserMove(dragstart_pos, dragend_pos);
     });
   }
 

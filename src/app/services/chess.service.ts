@@ -22,6 +22,14 @@ export class ChessService {
 
   }
 
+  isAIMode() {
+    return this.mode === 'AI';
+  }
+
+  isMultiplayerMode() {
+    return this.mode === 'Multiplayer';
+  }
+
   setMode(mode) {
     this.mode = mode;
   }
@@ -72,19 +80,30 @@ export class ChessService {
       );
   }
 
+  setBoard(board) {
+    this.board = board;
+  }
+
   switchTurn() {
     // console.log(this.turn);
     this.turn = this.turn === 'light' ? 'dark' : 'light';
   }
 
-  checkLegal(coors, newCoors) {
+  doUserChessMove(coors, newCoors) {
     // console.log('CHECKING LEGAL WITH THE SERVER');
     const body = {
-      'board': this.board,
-      'coors': coors,
-      'newCoors': newCoors
+      board: this.board,
+      coors: coors,
+      newCoors: newCoors
     };
     return this.http.post(environment.domain + 'ai/islegal', JSON.stringify(body));
+  }
+
+  doAIChessMove() {
+    return this.http.post(environment.domain + 'ai/', {
+      board: this.board,
+      turn: this.turn
+    })
   }
 
   quitGame() {
