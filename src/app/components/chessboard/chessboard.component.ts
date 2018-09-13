@@ -26,6 +26,7 @@ import * as _ from 'underscore';
 
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Ng2DeviceService} from 'ng2-device-detector';
+import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
 
 // Axis Orientation
 //    Y
@@ -89,7 +90,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
               public socketService: IoService,
               private modalService: BsModalService,
               private renderer2: Renderer2,
-              private deviceService: Ng2DeviceService) {
+              private deviceService: Ng2DeviceService,
+              private spinnerService: Ng4LoadingSpinnerService) {
   }
 
   ngOnInit() {
@@ -278,6 +280,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
             // Dont Switch turn since not legal move
             // Show not valid move error
           } else if (this.chessService.isAIMode()) {
+            this.spinnerService.show();
             this.animateToNewBoard(board);
             this.chessService.setBoard(board);
             this.chessService.switchTurn();
@@ -292,6 +295,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
                   if (mate) {
                     console.log(mate);
                   }
+                }, () => {}, () => {
+                  this.spinnerService.hide()
                 }
               )
           }
