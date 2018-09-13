@@ -1,4 +1,3 @@
-import math
 import copy
 import random
 
@@ -8,101 +7,6 @@ def myDeepCopy(a):
     else:
         return copy.copy(a)
 
-'''
-
-
-# Class Based Implementation
-class Chess(object):
-    def __init__(self, board, coors1, coors2):
-        self.coors1 = coors1
-        self.coors2 = coors2
-        self.board = board
-
-    def getRowCol(self):
-        return [self.coors1['row'], self.coors1['col'], self.coors2['row'], self.coors2['col']]
-
-
-    def outOfBounds(self):
-        row = self.coors2['row']
-        col = self.coors2['col']
-        return row < 0 or row > 7 or col < 0 or col > 7
-
-    def legalPieceChecks(self):
-        curRow, curCol, newRow, newCol = self.getRowCol()
-        piece = self.board[curRow][curCol]
-        if not piece:
-            return False
-
-        name = piece['name']
-        if (outOfBounds()):
-            return False
-        if (isSameSide()):
-            return False
-        legal = False
-        if (name == 'knight'):
-            legal = isLegalKnight()
-        elif (name == 'queen'):
-            legal = isLegalQueen()
-        elif (name == 'bishop'):
-            legal = isLegalBishop()
-        elif (name == 'rook'):
-            legal = isLegalRook()
-        elif (name == 'pawn'):
-            legal = isLegalPawn()
-        elif (name == 'king'):
-            legal = isLegalKing() or isLegalCastle()
-
-        if (legal and name != 'knight' and isBlocked()):
-            return False
-
-        return legal
-
-
-    def isSameSide(self):
-        piece = getPiece(self.board, self.coors1)
-        color = piece['color']
-        next = self.board[self.coors2['row']][self.coors2['col']]
-        if (next):
-            next_color = next.get('color')
-            if (next_color == color):
-                return True
-        return False
-
-    def isLegalKnight(self):
-        rowDif, colDif = self.getRowColDif()
-        return (max(rowDif, colDif) == 2 and min(rowDif, colDif) == 1)
-
-    # CHESS UTILITIES / Get Directions for LEGAL FUNCTIONS
-    def getRowColDif(self):
-        rowDif = abs(self.coors1['row'] - self.coors2['row'])
-        colDif = abs(self.coors1['col'] - self.coors2['col'])
-        return [rowDif, colDif]
-
-    def isVerticalMove(self):
-        return (self.coors1['col'] == self.coors2['col'])
-
-    def isHorizontalMove(self):
-        return (self.coors1['row'] == self.coors2['row'])
-
-    def isDiagonalMove(self):
-        rowDif, colDif = getRowColDif()
-        return (rowDif == colDif)
-
-    def isMovingForward(self):
-        piece = self.getPiece(self.coors1)
-        if (piece['color'] == 'dark'):
-            return self.coors2['row'] > self.coors1['row']
-        else:
-            return self.coors1['row'] > self.coors2['row']
-
-
-    def getPiece(self, coors):
-        return self.board[coors['row']][coors['col']]
-
-'''
-
-
-#________________________________________________
 
 def print2D(l):
     print('\n')
