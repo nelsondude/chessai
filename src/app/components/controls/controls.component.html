@@ -1,8 +1,40 @@
-<div class="control-content">
-  <h1>
-    AI Mode Options
-  </h1>
-  <h3>
-    Difficulty
-  </h3>
+<div class="controls">
+  <div class="arrow-group">
+    <div class="round" id='top-arrow' (click)="rotateBoard('vertical', 0.1)">
+      <div class="cta">
+        <span class="arrow primera next "></span>
+        <span class="arrow segunda next "></span>
+      </div>
+    </div>
+    <div class="round" id='left-arrow' (click)="rotateBoard('horizontal', -1)">
+      <div class="cta">
+        <span class="arrow primera next "></span>
+        <span class="arrow segunda next "></span>
+      </div>
+    </div>
+
+    <div class="round" id='right-arrow' (click)="rotateBoard('horizontal', 1)">
+      <div class="cta">
+        <span class="arrow primera next "></span>
+        <span class="arrow segunda next "></span>
+      </div>
+    </div>
+    <div class="round" id='bottom-arrow' (click)="rotateBoard('vertical', -0.1)">
+      <div class="cta">
+        <span class="arrow primera next "></span>
+        <span class="arrow segunda next "></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-content">
+    <h1>
+      {{ chessService.mode }} Mode
+    </h1>
+    <h3>
+      Difficulty
+    </h3>
+  </div>
+
+
 </div>

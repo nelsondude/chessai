@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ChessService} from '../../services/chess.service';
 
 @Component({
   selector: 'app-info',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InfoComponent implements OnInit {
 
-  constructor() { }
+  constructor(private chessService: ChessService) {
+  }
 
   ngOnInit() {
+  }
+
+  changeMode(event) {
+    this.chessService.setMode(event.value);
   }
 
 }

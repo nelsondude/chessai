@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ChessService} from '../../services/chess.service';
 
 @Component({
   selector: 'app-controls',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ControlsComponent implements OnInit {
 
-  constructor() { }
+  private horiIncrement = Math.PI / 2;
+
+  constructor(private chessService: ChessService) {
+  }
 
   ngOnInit() {
   }
 
+  rotateBoard(dir, increment) {
+    if (dir === 'vertical') {
+      this.chessService.rotateBoardVertically.emit(increment);
+    } else if (dir === 'horizontal') {
+      this.chessService.rotateBoardHorizontally.emit(increment * this.horiIncrement);
+    }
+  }
 }

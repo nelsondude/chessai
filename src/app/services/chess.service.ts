@@ -12,9 +12,18 @@ export class ChessService {
   public boardChanged: EventEmitter<any> = new EventEmitter();
   public turn = 'light';
 
+  public mode = 'AI';
+
+  public rotateBoardVertically: EventEmitter<any> = new EventEmitter<any>();
+  public rotateBoardHorizontally: EventEmitter<any> = new EventEmitter<any>();
+
   constructor(private http: HttpClient,
               private spinnerService: Ng4LoadingSpinnerService) {
 
+  }
+
+  setMode(mode) {
+    this.mode = mode;
   }
 
   isPlaying() {
@@ -22,10 +31,7 @@ export class ChessService {
   }
 
   wasPlaying() {
-    if (localStorage.getItem('id')) {
-      return true;
-    }
-    return false;
+    return localStorage.getItem('id')!== null;
   }
 
   fetchStartGame(callback) {

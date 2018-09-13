@@ -25,7 +25,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 import * as _ from 'underscore';
 
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import { Ng2DeviceService } from 'ng2-device-detector';
+import {Ng2DeviceService} from 'ng2-device-detector';
 
 // Axis Orientation
 //    Y
@@ -35,7 +35,6 @@ import { Ng2DeviceService } from 'ng2-device-detector';
 //   / Board goes here
 //  /
 // Z
-
 
 
 @Component({
@@ -50,6 +49,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
 
   // Three Elements
   private camera: THREE.PerspectiveCamera;
+
   private get canvas(): HTMLCanvasElement {
     return this.canvasRef.nativeElement;
   }
@@ -72,7 +72,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   // Camera Properties
   public camRotation = new THREE.Vector3(0, 0, 0);
   public radius = 50;
-  public increment = Math.PI / 2;
 
 
   /* STAGE PROPERTIES */
@@ -81,7 +80,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   @Input() public farClippingPane = 10000;
 
   // Chess Properties
-  public boardLengths: {size: THREE.Vector3, min: THREE.Vector3, max: THREE.Vector3};
+  public boardLengths: { size: THREE.Vector3, min: THREE.Vector3, max: THREE.Vector3 };
   public boardMultiplier = 8 / 9.2; // ratio of squares to to total squares from edge to edge
   public piecePos = new THREE.Vector3();
 
@@ -90,7 +89,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
               public socketService: IoService,
               private modalService: BsModalService,
               private renderer2: Renderer2,
-              private deviceService: Ng2DeviceService) { }
+              private deviceService: Ng2DeviceService) {
+  }
 
   ngOnInit() {
     if (this.chessService.wasPlaying()) {
@@ -101,6 +101,18 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
       .subscribe(
         (board) => this.animateToNewBoard(board)
       );
+    this.chessService.rotateBoardVertically
+      .subscribe(
+        (increment) => {
+          this.rotateCameraVertically(increment);
+        }
+      );
+    this.chessService.rotateBoardHorizontally
+      .subscribe(
+        (increment) => {
+          this.rotateCameraHorizontally(increment);
+        }
+      )
   }
 
   ngAfterViewInit() {
@@ -146,13 +158,13 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
 
   initSphereScene() {
     const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(9999, 32, 32),
-        new THREE.MeshBasicMaterial({
-          // map: this.textLoader.load('assets/images/cubic_map.jpg'),
-          color: 0xff00ff,
-          side: THREE.DoubleSide
-        })
-      );
+      new THREE.SphereGeometry(9999, 32, 32),
+      new THREE.MeshBasicMaterial({
+        // map: this.textLoader.load('assets/images/cubic_map.jpg'),
+        color: 0xff00ff,
+        side: THREE.DoubleSide
+      })
+    );
     this.scene.add(sphere);
   }
 
@@ -164,9 +176,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     board.forEach((row, i) => {
       row.forEach((piece, j) => {
         if (piece === null) return;
-        const name = piece['name'];
         const id = piece['id'];
-        const color = piece['color'];
         const obj = this.scene.getObjectByName(id);
         ids.push(id);
         if (obj) {
@@ -180,6 +190,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
       const obj = this.scene.getObjectByName(id);
       obj.visible = false;
     });
+
+    // this.chessService.sendBoard(this.chessService.turn);
 
     // const set1 = new Set(ids);
     // const set2 = new Set(_.range(0, total));
@@ -200,7 +212,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
         const v = new THREE.Vector3(0, this.camera.position.y, 0);
         const radius = this.camera.position.distanceTo(v);
         this.camera.position.z = radius * Math.cos(alpha);
-        this.camera.position.x  = radius * Math.sin(alpha);
+        this.camera.position.x = radius * Math.sin(alpha);
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       });
   }
@@ -268,7 +280,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     const temp = new THREE.Vector3(pos.x, 0, pos.z);
     const result = new Coor(0, 0);
     let min = null;
-    for (let row = 0; row < 8; row ++) {
+    for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col += 1) {
         const coors = this.getPosFromRowCol(row, col);
         if (result == null) {
@@ -297,7 +309,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   }
 
 
-
   // Give position, get closest position
   getClosestPos(pos: THREE.Vector3): Pos {
     const square = this.getRowColFromPos(pos);
@@ -307,7 +318,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   // Piece Positioning
 
   setPiecePosition(row, col, obj): THREE.Vector3 {
-    const sizeBox = new THREE.Box3().setFromObject( obj );
+    const sizeBox = new THREE.Box3().setFromObject(obj);
     const position = this.getPosFromRowCol(row, col);
     const height = this.getPieceHeight(sizeBox.min);
     return new Vector3(position.x, height, position.z);
@@ -320,7 +331,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     const start = min + edge + box_width / 2;
     return start + (index * box_width);
   }
-
 
 
   getPieceHeight(min: THREE.Vector3) {
@@ -358,12 +368,12 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     const component: ChessboardComponent = this;
     /* Renderer */
     // Use canvas element in template
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true });
+    this.renderer = new THREE.WebGLRenderer({canvas: this.canvas, alpha: true});
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.setClearColor( 0x000000, 0 );
+    this.renderer.setClearColor(0x000000, 0);
 
     // Start Orbit Control
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -385,7 +395,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     }());
   }
 
-  updateScene() { }
+  updateScene() {
+  }
 
   // Adding elements to the scene
 
@@ -396,13 +407,13 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
         if (success) {
           this.addPieces();
         }
-      })
+      });
     });
   }
 
   addBoard(callback) {
     this.objLoader.load('assets/pieces_comp/chessboard.obj', (obj: THREE.Object3D) => {
-      const material = new THREE.MeshStandardMaterial( { map: this.textLoader.load('assets/images/marble.jpeg'), side: THREE.DoubleSide } );
+      const material = new THREE.MeshStandardMaterial({map: this.textLoader.load('assets/images/marble.jpeg'), side: THREE.DoubleSide});
       obj.traverse(function (child) {
         child.userData.parent = obj;
         if (child instanceof THREE.Mesh) {
@@ -410,11 +421,11 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
         }
       });
       // obj.scale.set(0.05, 0.05, 0.05);
-      const box = new THREE.Box3().setFromObject( obj );
+      const box = new THREE.Box3().setFromObject(obj);
       this.boardLengths = {'size': box.getSize(), 'min': box.min, 'max': box.max};
 
       obj.rotation.x = 3 * Math.PI / 2;
-      obj.position.y = - this.boardLengths.size.z / 2;
+      obj.position.y = -this.boardLengths.size.z / 2;
       this.scene.add(obj);
       callback();
     });
@@ -475,8 +486,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   // Event Handlers
 
   updateMouse(event: any) {
-    this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   @HostListener('window:resize', ['$event'])
