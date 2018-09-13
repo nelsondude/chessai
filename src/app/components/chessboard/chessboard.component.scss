@@ -1,0 +1,15 @@
+@import '../../../variables';
+
+.btn-chess {
+  color: $text-color;
+  background-color: $dark-purple;
+}
+
+
+#canvas {
+  max-height: 700px;
+  max-width: 615px;
+  min-width: 450px;
+}
+
+//Comment
