@@ -120,10 +120,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.initScene();
     this.initLighting();
-    // this.addShadowBox();
-    // this.addCube();
     this.initChess();
-    // this.initSphereScene();
     this.startRenderingLoop();
     this.initDraggable();
     this.onResize();
