@@ -39,8 +39,9 @@ class LegalView(BaseView):
 		board = data.get('board')
 		coors1 = data.get('coors')
 		coors2 = data.get('newCoors')
+		turn = data.get('turn')
 
-		legal = is_legal(board, coors1, coors2)
+		legal = is_legal(board, coors1, coors2, turn)
 		new_board = modify_legal_board(board, coors1, coors2) if legal else board
 		result = {'legal': legal, 'board': new_board}
 

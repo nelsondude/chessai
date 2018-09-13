@@ -164,7 +164,14 @@ def get_legal_moves_for_piece(board, coors1):
     return moves
 
 
-def is_legal(board, coors1, coors2):
+def correct_color_piece_moved(board, coors, turn):
+    piece = board[coors['row']][coors['col']]
+    return piece['color'] == turn
+
+
+def is_legal(board, coors1, coors2, turn=None):
+    if turn and not correct_color_piece_moved(board, coors1, turn):
+        return False
     legal = legal_piece_checks(board, coors1, coors2)
 
     if legal:

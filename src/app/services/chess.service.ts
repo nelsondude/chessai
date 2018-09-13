@@ -94,7 +94,8 @@ export class ChessService {
     const body = {
       board: this.board,
       coors: coors,
-      newCoors: newCoors
+      newCoors: newCoors,
+      turn: this.turn
     };
     return this.http.post(environment.domain + 'ai/islegal', JSON.stringify(body));
   }
