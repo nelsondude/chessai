@@ -16,7 +16,7 @@ import {Ng4LoadingSpinnerModule} from 'ng4-loading-spinner';
 import {BannerComponent} from './components/banner/banner.component';
 import {ControlsComponent} from './components/controls/controls.component';
 import {InfoComponent} from './components/info/info.component';
-
+import {MatRadioModule, MatSlideToggleModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -34,11 +34,11 @@ import {InfoComponent} from './components/info/info.component';
     ModalModule.forRoot(),
     TruncateModule,
     BrowserAnimationsModule,
-    // MatTabsModule,
     Ng4LoadingSpinnerModule.forRoot(),
     TabsModule.forRoot(),
-    Ng2DeviceDetectorModule.forRoot()
-
+    Ng2DeviceDetectorModule.forRoot(),
+    MatRadioModule,
+    MatSlideToggleModule
   ],
   providers: [
     IoService,

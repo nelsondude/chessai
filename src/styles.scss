@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "variables";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 button:hover, a:hover {
   cursor: pointer;
@@ -8,6 +9,5 @@ button:hover, a:hover {
 
 body {
   color: white;
-
 }
 
