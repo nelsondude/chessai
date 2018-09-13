@@ -407,32 +407,16 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.setClearColor(0x000000, 0);
-
-    // Start Orbit Control
-    // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    // this.controls.update();
-    // const info = this.deviceService.getDeviceInfo();
-    // if (info['device'] === 'android' || info['device'] === 'iphone') {
-    //   this.controls.enableZoom = false;
-    //   this.controls.enableRotate = false;
-    // }
     this.camera.updateMatrixWorld(true);
-    // this.trackControls = new TrackballControls( this.camera, this.renderer );
 
     (function render() {
       requestAnimationFrame(render);
       TWEEN.update();
-      // component.controls.update();
-      component.updateScene();
       component.renderer.render(component.scene, component.camera);
     }());
   }
 
-  updateScene() {
-  }
-
   // Adding elements to the scene
-
 
   initChess() {
     this.addBoard(() => {
