@@ -159,7 +159,8 @@ def get_legal_moves_for_piece(board, coors1):
     for i in range(len(board)):
         for j in range(len(board)):
             coors2 = {'row': i, 'col': j}
-            if is_legal(board, coors1, coors2):
+            turn = board[coors1['row']][coors1['col']]['color']
+            if is_legal(board, coors1, coors2, turn)['legal']:
                 moves.append({'coors1': coors1, 'coors2': coors2})
     return moves
 
@@ -169,26 +170,23 @@ def correct_color_piece_moved(board, coors, turn):
     return piece['color'] == turn
 
 
-def is_legal(board, coors1, coors2, turn=None):
+def is_legal(board, coors1, coors2, turn):
     if turn and not correct_color_piece_moved(board, coors1, turn):
         return False
-    legal = legal_piece_checks(board, coors1, coors2)
 
+    cur_row, cur_col, new_row, new_col = get_row_col(coors1, coors2)
+    piece = board[cur_row][cur_col]
+    castle = False
+    legal = legal_piece_checks(board, coors1, coors2)
     if legal:
-        cur_row, cur_col, new_row, new_col = get_row_col(coors1, coors2)
-        piece = board[cur_row][cur_col]
         temp_board = create_temp_board(board, coors1, coors2)
         legal = not is_color_in_check(temp_board, piece['color'])
-
         # Checks to see if tempboard has check once moved
+    elif (piece['name'] == 'king' and turn == piece['color'] and
+            is_legal_castle(board, coors1, coors2, turn)):
+        castle = True
 
-    # castle_board = is_legal_castle(board, coors1, coors2)
-    # if (castle_board)
-    # 1. Does the move put the current player in check?
-    # 2. Does the move go through any piece? NA for Knight
-    # 3. Does the move go on the same color piece
-
-    return legal
+    return {'legal': legal, 'castle': castle}
 
 
 def modify_legal_board(board, coors1, coors2):
@@ -226,6 +224,8 @@ def get_coors_from_name_color(board, name, color):
 def create_temp_board(board, coors1, coors2):
     temp = my_deep_copy(board)
     cur_row, cur_col, new_row, new_col = get_row_col(coors1, coors2)
+    if cur_row == cur_col and new_row == new_col:
+        return temp
     piece = temp[cur_row][cur_col]
     if piece:
         piece['moved'] = True
@@ -256,33 +256,38 @@ def is_blocked(board, coors1, coors2):
     return result
 
 
-def is_legal_castle(board, coors1, coors2):
-    # king side castle:
-    # two squares must be empty
-    # Check to see if king is blocked by going to the corner
-    # King and Rook have already moved
-    row_dif, col_dif = get_row_col_dif(coors1, coors2)
-    piece = get_piece(board, coors1)
+def is_legal_castle(board, coors1, coors2, color):
+    start_row, start_col = coors1['row'], coors1['col']
+    end_row, end_col = coors2['row'], coors2['col']
 
-    if col_dif != 2 or row_dif != 0:
-        return False
-    if piece['name'] != 'king':
-        return False
-    if piece and piece['moved'] is True:
+    # King must be there and not moved
+    king = board[start_row][start_col]
+    if not king or king['name'] != 'king' or king['moved']:
         return False
 
-    corner = {'row': 7, 'col': 7}
-    rook_move = {'row': 7, 'col': 5}
-    piece2 = get_piece(board, corner)
-    if piece2 and piece2['moved'] is True:
-        return False
-    if is_blocked(board, coors1, corner):
+    # Rook must be there and not moved
+    rook = board[start_row][7]
+    if not rook or rook['name'] != 'rook' or rook['moved']:
         return False
 
-    mod1 = create_temp_board(board, coors1, coors2)
-    mod2 = create_temp_board(mod1, corner, rook_move)
+    # Spaces must be empty
+    if board[start_row][5] or board[start_row][6]:
+        return False
 
-    return mod2
+    if end_row != start_row or end_col != 6:
+        return False
+
+    coors = [
+        [start_row, start_col],
+        [start_row, start_col + 1],
+        [start_row, start_col + 2]
+    ]
+    for row, col in coors:
+        temp_board = create_temp_board(board, coors1, {'row': row, 'col': col})
+        if is_color_in_check(temp_board, color):
+            return False
+
+    return True
 
 
 def get_piece(board, coors):

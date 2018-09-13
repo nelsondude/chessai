@@ -24,7 +24,7 @@ class AiView(BaseView):
 		data = self.get_data(request)
 		board = data.get('board')
 		turn = data.get('turn')
-		depth = 3
+		depth = 2
 		new_board = get_best_move(board, turn, depth)
 		return HttpResponse(json.dumps(new_board))
 
@@ -42,7 +42,11 @@ class LegalView(BaseView):
 		turn = data.get('turn')
 
 		legal = is_legal(board, coors1, coors2, turn)
-		new_board = modify_legal_board(board, coors1, coors2) if legal else board
+		if legal['castle']:
+			board1 = modify_legal_board(board, {'row': coors1['row'], 'col': 7}, {'row': coors1['row'], 'col': 5})
+			new_board = modify_legal_board(board1, coors1, coors2)
+		else:
+			new_board = modify_legal_board(board, coors1, coors2) if legal['legal'] else board
 		result = {'legal': legal, 'board': new_board}
 
 		return HttpResponse(json.dumps(result))
