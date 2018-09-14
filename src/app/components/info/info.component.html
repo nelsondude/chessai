@@ -1,0 +1,16 @@
+<div class="info">
+  <div class="info-row">
+    <mat-radio-group (change)="changeMode($event)">
+      <mat-radio-button labelPosition="before" [checked]="true" value="AI">AI Mode</mat-radio-button>
+      <mat-radio-button disabled value="Multiplayer">Multiplayer</mat-radio-button>
+    </mat-radio-group>
+    <mat-slide-toggle disabled="" labelPosition="before">
+      Timed
+    </mat-slide-toggle>
+  </div>
+  <div class="info-row">
+    <span>Me</span>
+    <span>Turn: {{ chessService.turn }}</span>
+    <span>Computer</span>
+  </div>
+</div>
