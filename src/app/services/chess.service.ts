@@ -50,41 +50,15 @@ export class ChessService {
     return this.http.get('api/get-start-board');
   }
 
-  sendBoard(color: string) {
-    this.spinnerService.show();
-    const body = {
-      'board': this.board,
-      'turn': color
-    };
-    this.http.post(environment.domain + 'ai/', body)
-      .subscribe(
-        data => {
-          this.spinnerService.hide();
-          const board = data['board'];
-          const mate = data['mate'];
-          if (mate) {
-            console.log(`${color.toUpperCase()} was checkmated!!!`);
-          }
-          this.updateAIGame(board);
-        },
-        err => {
-          console.log(err);
-          this.spinnerService.hide();
-        }
-      );
-  }
-
   setBoard(board) {
     this.board = board;
   }
 
   switchTurn() {
-    // console.log(this.turn);
     this.turn = this.turn === 'light' ? 'dark' : 'light';
   }
 
   doUserChessMove(coors, newCoors) {
-    // console.log('CHECKING LEGAL WITH THE SERVER');
     const body = {
       board: this.board,
       coors: coors,

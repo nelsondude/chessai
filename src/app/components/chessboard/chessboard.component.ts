@@ -272,14 +272,14 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
         (data) => {
           const board = data['board'];
           const legal = data['legal'];
+          this.animateToNewBoard(board);
+          this.chessService.setBoard(board);
           if (!legal) {
-            this.animateToNewBoard(board);
+            console.log('Not Legal Move')
             // Dont Switch turn since not legal move
             // Show not valid move error
           } else if (this.chessService.isAIMode()) {
             this.spinnerService.show();
-            this.animateToNewBoard(board);
-            this.chessService.setBoard(board);
             this.chessService.switchTurn();
             this.chessService.doAIChessMove()
               .subscribe(
@@ -297,8 +297,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
                 }
               )
           } else if (this.chessService.isHumanMode()) {
-            this.animateToNewBoard(board);
-            this.chessService.setBoard(board);
             this.chessService.switchTurn();
             this.rotateCameraHorizontally(Math.PI);
           }
