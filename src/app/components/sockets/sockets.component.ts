@@ -1,6 +1,7 @@
 import {AfterContentInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {IoService} from '../../services/io.service';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {ChessService} from '../../services/chess.service';
 
 @Component({
   selector: 'app-sockets',
@@ -15,7 +16,8 @@ export class SocketsComponent implements OnInit, AfterContentInit {
 
 
   constructor(public socketService: IoService,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              public chessService: ChessService) { }
 
   ngOnInit() {
     this.socketService.modalControl.subscribe(

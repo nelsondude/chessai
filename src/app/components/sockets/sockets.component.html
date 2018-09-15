@@ -1,3 +1,12 @@
+<ul *ngIf="socketService.peopleConnected() && chessService.isMultiplayerMode()">
+  <li  *ngFor="let client of socketService.getClients()">
+    <button (click)="socketService.requestToPlay(client)">
+      Play
+    </button>
+    {{ client | truncate : 15 }}
+  </li>
+</ul>
+
 <!--Request Game Modal-->
 <ng-template #template>
   <div class="modal-header">
