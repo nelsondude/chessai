@@ -296,6 +296,11 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
                   this.spinnerService.hide()
                 }
               )
+          } else if (this.chessService.isHumanMode()) {
+            this.animateToNewBoard(board);
+            this.chessService.setBoard(board);
+            this.chessService.switchTurn();
+            this.rotateCameraHorizontally(Math.PI);
           }
         }
       );

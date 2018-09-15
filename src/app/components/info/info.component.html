@@ -1,8 +1,12 @@
 <div class="info">
-  <div class="info-row">
+  <div class="info-row" style="padding-bottom: 10px;">
     <mat-radio-group (change)="changeMode($event)">
-      <mat-radio-button labelPosition="before" [checked]="true" value="AI">AI Mode</mat-radio-button>
-      <mat-radio-button disabled value="Multiplayer">Multiplayer</mat-radio-button>
+      <mat-radio-button
+        *ngFor="let option of options"
+        labelPosition="before"
+        [disabled]="option.disabled"
+        [checked]="option.checked"
+        [value]="option.value">{{ option.value }}</mat-radio-button>
     </mat-radio-group>
     <mat-slide-toggle disabled="" labelPosition="before">
       Timed

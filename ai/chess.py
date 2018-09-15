@@ -220,7 +220,7 @@ def get_coors_from_name_color(board, name, color):
 def create_temp_board(board, coors1, coors2):
     temp = my_deep_copy(board)
     cur_row, cur_col, new_row, new_col = get_row_col(coors1, coors2)
-    if cur_row == cur_col and new_row == new_col:
+    if cur_row == new_row and cur_col == new_col:
         return temp
     piece = temp[cur_row][cur_col]
     if piece:

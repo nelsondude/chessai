@@ -7,6 +7,11 @@ import {ChessService} from '../../services/chess.service';
   styleUrls: ['./info.component.css']
 })
 export class InfoComponent implements OnInit {
+  options = [
+    {value: 'AI', disabled: false, checked: false},
+    {value: 'Human vs Human', disabled: false, checked: true},
+    {value: 'Multiplayer', disabled: true, checked: false}
+  ]
 
   constructor(private chessService: ChessService) {
   }

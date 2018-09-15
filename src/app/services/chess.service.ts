@@ -30,6 +30,10 @@ export class ChessService {
     return this.mode === 'Multiplayer';
   }
 
+  isHumanMode() {
+    return this.mode === 'Human vs Human';
+  }
+
   setMode(mode) {
     this.mode = mode;
   }

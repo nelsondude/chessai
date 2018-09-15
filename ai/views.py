@@ -47,6 +47,6 @@ class LegalView(BaseView):
 			new_board = modify_legal_board(board1, coors1, coors2)
 		else:
 			new_board = modify_legal_board(board, coors1, coors2) if legal['legal'] else board
-		result = {'legal': legal['legal'], 'board': new_board}
+		result = {'legal': legal['legal'] or legal['castle'], 'board': new_board}
 
 		return HttpResponse(json.dumps(result))

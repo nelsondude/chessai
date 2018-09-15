@@ -1,12 +1,13 @@
 .info {
-  text-align: center;
-  position: absolute;
-  width: 100%;
-  top: 80px;
+}
+
+mat-radio-group {
+  display: inline-flex;
+  flex-direction: column;
 }
 
 mat-radio-button {
-  padding-right: 20px;
+  /*padding-right: 20px;*/
 }
 
 .info-row {
