@@ -46,18 +46,8 @@ export class ChessService {
     return localStorage.getItem('id')!== null;
   }
 
-  fetchStartGame(callback) {
-    this.http.get('api/get-start-board')
-      .subscribe(
-        data => {
-          this.board = data['board'];
-          callback(true);
-        },
-        err => {
-          console.log(err);
-          callback(false);
-        }
-      );
+  fetchStartGame() {
+    return this.http.get('api/get-start-board');
   }
 
   sendBoard(color: string) {

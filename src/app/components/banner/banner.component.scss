@@ -1,9 +1,11 @@
 .banner-title {
+  transition: all .2s;
   font-size: 130px;
   text-transform: uppercase;
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   margin: 0;
-  min-width: 250px;
-  /*text-orientation: upright;*/
+  @media screen and (max-width: 900px) {
+    font-size: 90px;
+  }
 }

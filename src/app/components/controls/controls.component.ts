@@ -23,4 +23,13 @@ export class ControlsComponent implements OnInit {
       this.chessService.rotateBoardHorizontally.emit(increment * this.horiIncrement);
     }
   }
+  resetGame() {
+    this.chessService.fetchStartGame()
+      .subscribe(
+        data => {
+          this.chessService.setBoard(data['board']);
+          this.chessService.boardChanged.emit(data['board']);
+        }
+      )
+  }
 }

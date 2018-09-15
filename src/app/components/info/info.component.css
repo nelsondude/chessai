@@ -1,4 +1,6 @@
 .info {
+  padding-top: 20px;
+  min-width: 758px;
 }
 
 mat-radio-group {

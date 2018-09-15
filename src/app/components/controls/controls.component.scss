@@ -140,3 +140,33 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
+
+
+//Button
+
+
+.reset-button {
+  &:hover {
+    cursor: pointer;
+    border-color: darkblue;
+    background-color: white;
+    color: darkblue;
+  }
+  &:focus {
+    outline: 0;
+  }
+  transition: all .2s;
+  padding: 20px 40px;
+  border-radius: 20px;
+  border: 2px solid white;
+  color: white;
+  background: transparent;
+  text-transform: uppercase;
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  @media screen and (max-width: 1143px) {
+    font-size: 15px;
+    padding: 20px 35px;
+  }
+}

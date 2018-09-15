@@ -8,10 +8,10 @@ import {ChessService} from '../../services/chess.service';
 })
 export class InfoComponent implements OnInit {
   options = [
-    {value: 'AI', disabled: false, checked: false},
-    {value: 'Human vs Human', disabled: false, checked: true},
+    {value: 'AI', disabled: false, checked: true},
+    {value: 'Human vs Human', disabled: false, checked: false},
     {value: 'Multiplayer', disabled: true, checked: false}
-  ]
+  ];
 
   constructor(private chessService: ChessService) {
   }
@@ -22,5 +22,4 @@ export class InfoComponent implements OnInit {
   changeMode(event) {
     this.chessService.setMode(event.value);
   }
-
 }

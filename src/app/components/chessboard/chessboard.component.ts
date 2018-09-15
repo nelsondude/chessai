@@ -422,11 +422,13 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
 
   initChess() {
     this.addBoard(() => {
-      this.chessService.fetchStartGame((success) => {
-        if (success) {
-          this.addPieces();
-        }
-      });
+      this.chessService.fetchStartGame()
+        .subscribe(
+          data => {
+            this.chessService.setBoard(data['board']);
+            this.addPieces();
+          }
+        )
     });
   }
 
