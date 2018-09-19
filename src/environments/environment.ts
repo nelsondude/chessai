@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  domain: 'http://0.0.0.0:8000/'
+  domain: 'https://floating-river-74363.herokuapp.com/'
 };
