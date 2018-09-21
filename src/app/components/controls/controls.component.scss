@@ -148,9 +148,10 @@
 .reset-button {
   &:hover {
     cursor: pointer;
-    border-color: darkblue;
+    border-color: transparent;
     background-color: white;
-    color: darkblue;
+    color: black;
+    text-decoration: none;
   }
   &:focus {
     outline: 0;
@@ -168,5 +169,35 @@
   @media screen and (max-width: 1143px) {
     font-size: 15px;
     padding: 20px 35px;
+  }
+}
+
+.source-button {
+  @extend .reset-button;
+  border-radius: 2px;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 10px;
+  margin: 0;
+  animation: 2s slideInFromRight;
+  &:hover {
+    font-size: 13px;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    right: -50px;
+    transform: translateX(100%);
+  }
+  80% {
+    right: -50px;
+    transform: translateX(100%);
+  }
+  100% {
+    right: 10px;
+    transform: translateX(0);
   }
 }
