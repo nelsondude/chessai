@@ -13,7 +13,7 @@ export class ChessService {
   public turn = 'light';
 
   public mode = 'AI';
-  public level = 2;
+  public level = 3;
 
   public rotateBoardVertically: EventEmitter<any> = new EventEmitter<any>();
   public rotateBoardHorizontally: EventEmitter<any> = new EventEmitter<any>();
