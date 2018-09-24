@@ -24,7 +24,7 @@ class AiView(BaseView):
 		data = self.get_data(request)
 		board = data.get('board')
 		turn = data.get('turn')
-		depth = 3
+		depth = data.get('level', 2)
 		new_board = get_best_move(board, turn, depth)
 		return HttpResponse(json.dumps(new_board))
 
