@@ -17,6 +17,7 @@ import {BannerComponent} from './components/banner/banner.component';
 import {ControlsComponent} from './components/controls/controls.component';
 import {InfoComponent} from './components/info/info.component';
 import {MatRadioModule, MatSlideToggleModule} from '@angular/material';
+import {Ng5SliderModule} from 'ng5-slider';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {MatRadioModule, MatSlideToggleModule} from '@angular/material';
     TabsModule.forRoot(),
     Ng2DeviceDetectorModule.forRoot(),
     MatRadioModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    Ng5SliderModule
   ],
   providers: [
     IoService,

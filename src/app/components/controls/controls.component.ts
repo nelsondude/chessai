@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ChessService} from '../../services/chess.service';
+import { Options } from 'ng5-slider';
 
 @Component({
   selector: 'app-controls',
@@ -7,6 +8,28 @@ import {ChessService} from '../../services/chess.service';
   styleUrls: ['./controls.component.scss']
 })
 export class ControlsComponent implements OnInit {
+  levels = ["Horrible", "Beginner", "Amateur", "Expert"];
+  value: number = 3;
+  options: Options = {
+    floor: 1,
+    ceil: 4,
+    showTicks: true,
+    ticksTooltip: (v: number): string => {
+      return this.levels[v];
+    },
+    getTickColor: (value: number): string => {
+      if (value === 1) {
+        return '#42f459';
+      }
+      if (value === 2) {
+        return '#f1f441';
+      }
+      if (value === 3) {
+        return '#f48e41';
+      }
+      return '#f44141';
+    }
+  };
 
   private horiIncrement = Math.PI / 2;
 
