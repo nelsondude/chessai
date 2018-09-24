@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ChessService} from '../../services/chess.service';
 import { Options } from 'ng5-slider';
 
@@ -7,9 +7,8 @@ import { Options } from 'ng5-slider';
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.scss']
 })
-export class ControlsComponent implements OnInit {
+export class ControlsComponent {
   levels = ["Horrible", "Beginner", "Amateur", "Expert"];
-  value: number = 3;
   options: Options = {
     floor: 1,
     ceil: 4,
@@ -33,10 +32,7 @@ export class ControlsComponent implements OnInit {
 
   private horiIncrement = Math.PI / 2;
 
-  constructor(private chessService: ChessService) {
-  }
-
-  ngOnInit() {
+  constructor(public chessService: ChessService) {
   }
 
   rotateBoard(dir, increment) {

@@ -1,7 +1,7 @@
 <div class="controls">
   <h3>AI Level</h3>
   <div class="slider-container custom-slider">
-    <ng5-slider [(value)]="value" [options]="options"></ng5-slider>
+    <ng5-slider [(value)]="chessService.level" [options]="options"></ng5-slider>
   </div>
   <button class="reset-button" (click)="resetGame()">
     reset game

@@ -13,6 +13,7 @@ export class ChessService {
   public turn = 'light';
 
   public mode = 'AI';
+  public level = 2;
 
   public rotateBoardVertically: EventEmitter<any> = new EventEmitter<any>();
   public rotateBoardHorizontally: EventEmitter<any> = new EventEmitter<any>();
@@ -71,7 +72,8 @@ export class ChessService {
   doAIChessMove() {
     return this.http.post(environment.domain + 'ai/', {
       board: this.board,
-      turn: this.turn
+      turn: this.turn,
+      level: this.level
     })
   }
 
