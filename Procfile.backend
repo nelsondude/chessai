@@ -1,1 +1,1 @@
-backend: gunicorn chessai.wsgi
+web: gunicorn chessai.wsgi
