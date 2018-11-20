@@ -4,6 +4,6 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  domain: '0.0.0.0:8000'
+  production: true,
+  domain: 'https://floating-river-74363.herokuapp.com/'
 };
