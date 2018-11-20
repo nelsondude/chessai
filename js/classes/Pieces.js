@@ -12,17 +12,17 @@ class Piece {
   getValue() {
     switch (this.constructor.name.toLowerCase()) {
       case 'pawn':
-        return 1;
+        return 10;
       case 'knight':
-        return 3;
+        return 30;
       case 'rook':
-        return 5;
+        return 50;
       case 'bishop':
-        return 3.5;
+        return 35;
       case 'queen':
-        return 9;
-      case 'king':
         return 90;
+      case 'king':
+        return 900;
       default:
         return 0;
     }

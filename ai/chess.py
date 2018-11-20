@@ -1,5 +1,6 @@
 import copy
 import random
+from .evaluation import get_points
 
 
 def my_deep_copy(a):
@@ -117,19 +118,6 @@ def get_best_move(board, color, depth):
         'board': new_board,
         'mate': move is None
     }
-
-
-# Static method
-def get_points(board, color):
-    total = 0
-    for row in board:
-        for square in row:
-            if square:
-                if square['color'] == color:
-                    total -= square['value']
-                else:
-                    total += square['value']
-    return total
 
 
 # class method
