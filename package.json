@@ -4,9 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "per-env",
-    "start:development": "node server.js",
-    "start:production": "node server.js",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -15,7 +13,7 @@
     "nodemon": "nodemon server.js",
     "postinstall": "per-env",
     "postinstall:development": "echo Dont run build after installing",
-    "postinstall:production": "npm run build"
+    "postinstall:production": "ng build --prod --env=prod"
   },
   "engines": {
     "node": "8.11.4",
