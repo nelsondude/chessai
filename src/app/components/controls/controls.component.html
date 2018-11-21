@@ -1,38 +1,25 @@
 <div class="controls">
-  <h3>AI Level</h3>
-  <div class="slider-container custom-slider">
-    <ng5-slider [(value)]="chessService.level" [options]="options"></ng5-slider>
+  <div *ngIf="chessService.isAIMode()">
+    <h3>AI Level</h3>
+    <div class="slider-container custom-slider">
+      <ng5-slider [(value)]="chessService.level" [options]="options"></ng5-slider>
+    </div>
+  </div>
+  <div *ngIf="chessService.isMultiplayerMode()">
+    <h3>Players Online</h3>
+    <ul *ngIf="socketService.peopleConnected() && chessService.isMultiplayerMode()">
+      <li  *ngFor="let client of socketService.getClients()">
+        <button (click)="socketService.requestToPlay(client)">
+          Play
+        </button>
+        {{ client | truncate : 15 }}
+      </li>
+    </ul>
   </div>
   <button class="reset-button" (click)="resetGame()">
     reset game
   </button>
-  <div class="arrow-group">
-    <div class="round" id='top-arrow' (click)="rotateBoard('vertical', 0.1)">
-      <div class="cta">
-        <span class="arrow primera next "></span>
-        <span class="arrow segunda next "></span>
-      </div>
-    </div>
-    <div class="round" id='left-arrow' (click)="rotateBoard('horizontal', -1)">
-      <div class="cta">
-        <span class="arrow primera next "></span>
-        <span class="arrow segunda next "></span>
-      </div>
-    </div>
-
-    <div class="round" id='right-arrow' (click)="rotateBoard('horizontal', 1)">
-      <div class="cta">
-        <span class="arrow primera next "></span>
-        <span class="arrow segunda next "></span>
-      </div>
-    </div>
-    <div class="round" id='bottom-arrow' (click)="rotateBoard('vertical', -0.1)">
-      <div class="cta">
-        <span class="arrow primera next "></span>
-        <span class="arrow segunda next "></span>
-      </div>
-    </div>
-  </div>
+  <arrows></arrows>
   <app-sockets></app-sockets>
   <a href="https://github.com/nelsondude/chessai" target="_blank" class="source-button">source code</a>
 </div>

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {ChessService} from '../../services/chess.service';
 import { Options } from 'ng5-slider';
+import {IoService} from '../../services/io.service';
 
 @Component({
   selector: 'app-controls',
@@ -30,24 +31,17 @@ export class ControlsComponent {
     }
   };
 
-  private horiIncrement = Math.PI / 2;
-
-  constructor(public chessService: ChessService) {
+  constructor(public chessService: ChessService,
+              public socketService: IoService) {
   }
 
-  rotateBoard(dir, increment) {
-    if (dir === 'vertical') {
-      this.chessService.rotateBoardVertically.emit(increment);
-    } else if (dir === 'horizontal') {
-      this.chessService.rotateBoardHorizontally.emit(increment * this.horiIncrement);
-    }
-  }
   resetGame() {
     this.chessService.fetchStartGame()
       .subscribe(
         data => {
           this.chessService.setBoard(data['board']);
           this.chessService.boardChanged.emit(data['board']);
+          this.chessService.setTurn('light');
         }
       )
   }
