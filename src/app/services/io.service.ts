@@ -32,24 +32,8 @@ export class IoService implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // if (this.chessService.wasPlaying()) {
-    //   this.fetchGame(this.chessService.getGameId());
-    // }
-  }
-
   removeId(array, element) {
     return array.filter(e => e !== element);
-  }
-
-  getSocketId() {
-    if (this.socket) {
-      return this.socket.id;
-    }
-    return '';
-  }
-  getRequestedSocket() {
-    return this.requestedSocket;
   }
 
   // Handling requesting to play certain players

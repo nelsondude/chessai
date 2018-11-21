@@ -17,7 +17,6 @@ import {Coor, Pos} from '../../globals/classes';
 
 import DragControlsAdv from 'drag-controls-adv';
 
-const OrbitControls = require('three-orbit-controls')(THREE);
 const ObjLoader = require('three-obj-loader')(THREE);
 
 import * as THREE from 'three';
@@ -65,7 +64,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   private ambientLight: THREE.AmbientLight;
   private mouse: THREE.Vector2 = new THREE.Vector2();
   private dragControls: any;
-  private trackControls: any;
   private controls: any;
   private objects: Object3D[] = [];
   public tween: any;
@@ -95,10 +93,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    if (this.chessService.wasPlaying()) {
-      this.openModal(this.modalTemp);
-    }
-
     this.chessService.boardChanged
       .subscribe(
         (board) => this.animateToNewBoard(board)
@@ -132,7 +126,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   }
 
   // Initializer
-
   initScene() {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
@@ -153,18 +146,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     this.dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
     this.dirLight.position.set(1, 1, 0);
     this.scene.add(this.dirLight);
-  }
-
-  initSphereScene() {
-    const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(9999, 32, 32),
-      new THREE.MeshBasicMaterial({
-        // map: this.textLoader.load('assets/images/cubic_map.jpg'),
-        color: 0xff00ff,
-        side: THREE.DoubleSide
-      })
-    );
-    this.scene.add(sphere);
   }
 
   animateToNewBoard(board) {
@@ -192,7 +173,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
   // TWEEN ANIMATIONS _____________________________________________
 
   rotateCameraHorizontally(increment) {
-    // const newAlpha = dir === 'left' ? this.camRotation.x - this.increment : this.camRotation.x + this.increment;
     const newAlpha = this.camRotation.x + increment;
     this.tween = new TWEEN.Tween(this.camRotation)
       .to(new THREE.Vector3(newAlpha, 0, 0), 1000)
@@ -241,27 +221,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(() => {
       });
-  }
-
-  removePieceFromScene(piece) {
-    const obj = this.scene.getObjectByName(piece['id']);
-    if (obj) {
-      obj.visible = false;
-    }
-  }
-
-  movePiece(object: Object3D, pos: THREE.Vector3) {
-    const coors = this.getRowColFromPos(pos);
-    const newCoors: Coor = this.getRowColFromPos(object.position);
-    this.chessService.doUserChessMove(coors, newCoors)
-      .subscribe(
-        (data) => {
-          const board = data['board'];
-          const legal = data['legal'];
-          this.chessService.updateAIGame(board);
-        },
-        (err) => console.log(err)
-      );
   }
 
   doUserMove(dragstart_pos: THREE.Vector3, dragend_pos: THREE.Vector3) {
@@ -337,13 +296,6 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
     const x = this.getPieceStart(this.boardLengths.size.x, this.boardLengths.min.x, col);
     const z = this.getPieceStart(this.boardLengths.size.y, this.boardLengths.min.y, row);
     return new Pos(x, z);
-  }
-
-
-  // Give position, get closest position
-  getClosestPos(pos: THREE.Vector3): Pos {
-    const square = this.getRowColFromPos(pos);
-    return this.getPosFromRowCol(square.row, square.col);
   }
 
   // Piece Positioning
