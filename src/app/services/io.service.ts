@@ -1,9 +1,9 @@
-import {EventEmitter, Injectable, OnInit} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
 import {ChessService} from './chess.service';
 
 @Injectable()
-export class IoService implements OnInit {
+export class IoService {
   private socket: SocketIOClient.Socket;
   private clients = [];
   public modalControl = new EventEmitter<Boolean>();
@@ -28,6 +28,9 @@ export class IoService implements OnInit {
       const board = game['game'];
       const startTime = game['startTime'];
       const id = game['_id'];
+      const turn = game['turn'];
+      this.chessService.setMode('Multiplayer');
+      this.chessService.setTurn(turn);
       this.chessService.updateGame(board, startTime, id);
     });
   }

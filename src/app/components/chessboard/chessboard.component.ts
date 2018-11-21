@@ -184,6 +184,7 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
         const radius = this.camera.position.distanceTo(v);
         this.camera.position.z = radius * Math.cos(alpha);
         this.camera.position.x = radius * Math.sin(alpha);
+        // Keep the camera pointed at the origin of the scene
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       });
   }
@@ -234,8 +235,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
           this.animateToNewBoard(board);
           this.chessService.setBoard(board);
           if (!legal) {
-            console.log('Not Legal Move')
-            // Dont Switch turn since not legal move
+            alert("That was not a legal move!");
+            // Don't Switch turn since not legal move
             // Show not valid move error
           } else if (this.chessService.isAIMode()) {
             this.spinnerService.show();
@@ -249,15 +250,20 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
                   this.chessService.setBoard(ai_board);
                   this.chessService.switchTurn();
                   if (mate) {
-                    console.log(mate);
+                    alert('Checkmate!!');
                   }
-                }, () => {}, () => {
+                }, () => {
+                  this.spinnerService.hide();
+                  alert("An error occurred with the server... we will fix this");
+                }, () => {
                   this.spinnerService.hide()
                 }
               )
           } else if (this.chessService.isHumanMode()) {
             this.chessService.switchTurn();
             this.rotateCameraHorizontally(Math.PI);
+          } else if (this.chessService.isMultiplayerMode()) {
+            this.socketService.updateGame();
           }
         }
       );

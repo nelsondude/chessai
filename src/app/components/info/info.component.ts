@@ -10,7 +10,7 @@ export class InfoComponent implements OnInit {
   options = [
     {value: 'AI', disabled: false, checked: true},
     {value: 'Human vs Human', disabled: false, checked: false},
-    {value: 'Multiplayer', disabled: true, checked: false}
+    {value: 'Multiplayer', disabled: false, checked: false}
   ];
 
   constructor(private chessService: ChessService) {

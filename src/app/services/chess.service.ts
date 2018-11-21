@@ -18,10 +18,7 @@ export class ChessService {
   public rotateBoardVertically: EventEmitter<any> = new EventEmitter<any>();
   public rotateBoardHorizontally: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private http: HttpClient,
-              private spinnerService: Ng4LoadingSpinnerService) {
-
-  }
+  constructor(private http: HttpClient) { }
 
   isAIMode() {
     return this.mode === 'AI';
@@ -57,6 +54,10 @@ export class ChessService {
 
   switchTurn() {
     this.turn = this.turn === 'light' ? 'dark' : 'light';
+  }
+
+  setTurn(turn) {
+    this.turn = turn
   }
 
   doUserChessMove(coors, newCoors) {

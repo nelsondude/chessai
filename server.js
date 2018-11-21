@@ -4,7 +4,6 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const app = express();
-const assert = require('assert');
 
 const { createChessBoard }  = require('./js/Chess');
 
@@ -12,30 +11,16 @@ const { createChessBoard }  = require('./js/Chess');
 
 app.use(express.static(path.join(__dirname, '/dist')));
 
-app.get('/api/json', (req, res) => {
-  res.send({'name': 'Alex', 'email': 'atnelon@andrew.cmu.edu'});
-});
-
-app.get('/api/get-start-board', (req, res) => {
-  res.send({'board': createChessBoard()});
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(__dirname+"/dist/index.html");
-});
 
 
 
 // Socket / Mongo Config
 
-
-
-
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const mongoUri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@ds155577.mlab.com:55577/saynplay`;
+const mongoUri = process.env.MONGO_URI || `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@ds155577.mlab.com:55577/saynplay`;
 
 MongoClient.connect(mongoUri, (err, client) => {
   if (err) return console.log(err);
@@ -76,11 +61,13 @@ MongoClient.connect(mongoUri, (err, client) => {
     });
 
     socket.on('update game', (board, game_id) => {
-      updateGameById(db, game_id, board, (res) => {
-        findGameById(db, game_id, (game) => {
-          const id = game['_id'];
-          socket.join(`${id}`);
-          io.to(`${id}`).emit('game update', game);
+      findGameById(db, game_id, (game) => {  // switch the game turn on each update
+        updateGameById(db, game_id, board, game['turn'] === 'light' ? 'dark' : 'light', (res) => {
+          findGameById(db, game_id, (game) => {
+            const id = game['_id'];
+            socket.join(`${id}`);
+            io.to(`${id}`).emit('game update', game);
+          })
         })
       })
     });
@@ -97,6 +84,16 @@ MongoClient.connect(mongoUri, (err, client) => {
       updateClients();
     });
   });
+
+  // Api end points
+
+  app.get('/api/get-start-board', (req, res) => {
+    res.send({'board': createChessBoard()});
+  });
+
+  app.get('*', (req, res) => {
+    res.sendFile(__dirname+"/dist/index.html");
+  });
 });
 
 
@@ -109,10 +106,15 @@ function updateClients() {
   });
 }
 
-function remove(array, element) {
-  return array.filter(e => e !== element);
-}
-
+// Setup basic user
+const createuser = function(db, name, callback) {
+  db.collection('users').insertOne({
+    name: name,
+    created: Date.now()
+  }, () => {
+    callback(true)
+  })
+};
 
 // CHESS DB OPERATIONS
 const createGame = function(db, callback) {
@@ -121,6 +123,7 @@ const createGame = function(db, callback) {
   collection.insertOne({
     game: createChessBoard(),
     startTime: time,
+    turn: 'light'
   }, (err, result) => {
     callback(time);
   })
@@ -146,9 +149,9 @@ const findGameById = function(db, id, callback) {
   })
 };
 
-const updateGameById = function(db, id, board, callback) {
+const updateGameById = function(db, id, board, turn,  callback) {
   const collection = db.collection('games');
-  collection.updateOne({_id: ObjectId(id)}, {$set: {game : board}}, (err, res) => {
+  collection.updateOne({_id: ObjectId(id)}, {$set: {game : board, turn: turn}}, (err, res) => {
     callback(res);
   })
 };
