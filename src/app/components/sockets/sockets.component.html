@@ -1,28 +1,23 @@
-<ul *ngIf="socketService.peopleConnected() && chessService.isMultiplayerMode()">
-  <li  *ngFor="let client of socketService.getClients()">
-    <button (click)="socketService.requestToPlay(client)">
-      Play
-    </button>
-    {{ client | truncate : 15 }}
-  </li>
-</ul>
+
 
 <!--Request Game Modal-->
 <ng-template #template>
-  <div class="modal-header">
-    <h3 class="modal-title pull-left">{{socketService.getRequestedSocket()}} wants to play you!!</h3>
+  <div id="request-modal">
+    <div class="modal-header">
+      <h3 class="modal-title pull-left">Someone wants to play you!!</h3>
 
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <h4>Do You Accept?</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h4>Do You Accept?</h4>
 
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="pull-left btn btn-danger" (click)="respondToRequest('decline')">Decline</button>
-    <button type="button" class="pull-right btn btn-primary" (click)="respondToRequest('accept')">Accept</button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="pull-left btn btn-danger" (click)="respondToRequest('decline')">Decline</button>
+      <button type="button" class="pull-right btn btn-primary" (click)="respondToRequest('accept')">Accept</button>
+    </div>
   </div>
 </ng-template>
 
