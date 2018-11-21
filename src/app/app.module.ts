@@ -18,6 +18,7 @@ import {ControlsComponent} from './components/controls/controls.component';
 import {InfoComponent} from './components/info/info.component';
 import {MatRadioModule, MatSlideToggleModule} from '@angular/material';
 import {Ng5SliderModule} from 'ng5-slider';
+import { ArrowsComponent } from './components/arrows/arrows.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {Ng5SliderModule} from 'ng5-slider';
     AboutComponent,
     BannerComponent,
     ControlsComponent,
-    InfoComponent
+    InfoComponent,
+    ArrowsComponent
   ],
   imports: [
     BrowserModule,
