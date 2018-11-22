@@ -1,6 +1,11 @@
 .info {
   padding-top: 20px;
   min-width: 758px;
+
+  /*New styling*/
+  padding-bottom: 20px;
+  border-bottom: 1px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 mat-radio-group {
