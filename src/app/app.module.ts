@@ -19,6 +19,7 @@ import {InfoComponent} from './components/info/info.component';
 import {MatRadioModule, MatSlideToggleModule} from '@angular/material';
 import {Ng5SliderModule} from 'ng5-slider';
 import { ArrowsComponent } from './components/arrows/arrows.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ArrowsComponent } from './components/arrows/arrows.component';
     Ng4LoadingSpinnerModule.forRoot(),
     TabsModule.forRoot(),
     Ng2DeviceDetectorModule.forRoot(),
+    ToastrModule.forRoot(),
     MatRadioModule,
     MatSlideToggleModule,
     Ng5SliderModule

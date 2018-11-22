@@ -26,6 +26,7 @@ import * as _ from 'underscore';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Ng2DeviceService} from 'ng2-device-detector';
 import {Ng4LoadingSpinnerService} from 'ng4-loading-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 // Axis Orientation
 //    Y
@@ -89,7 +90,8 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
               private modalService: BsModalService,
               private renderer2: Renderer2,
               private deviceService: Ng2DeviceService,
-              private spinnerService: Ng4LoadingSpinnerService) {
+              private spinnerService: Ng4LoadingSpinnerService,
+              private toastr: ToastrService) {
   }
 
   ngOnInit() {
@@ -235,26 +237,32 @@ export class ChessboardComponent implements AfterViewInit, OnInit {
           this.animateToNewBoard(board);
           this.chessService.setBoard(board);
           if (!legal) {
-            alert("That was not a legal move!");
+            this.toastr.warning('', 'Not a legal move.', {
+              timeOut: 3000
+            })
             // Don't Switch turn since not legal move
             // Show not valid move error
           } else if (this.chessService.isAIMode()) {
             this.spinnerService.show();
             this.chessService.switchTurn();
+            this.toastr.info('', 'Our computers are thinking ...', {
+              progressBar: true
+            });
             this.chessService.doAIChessMove()
               .subscribe(
                 (data) => {
                   const ai_board = data['board'];
                   const mate = data['mate'];
+                  this.toastr.clear();
                   this.animateToNewBoard(ai_board);
                   this.chessService.setBoard(ai_board);
                   this.chessService.switchTurn();
                   if (mate) {
-                    alert('Checkmate!!');
+                    this.toastr.success('Checkmate!')
                   }
                 }, () => {
                   this.spinnerService.hide();
-                  alert("An error occurred with the server... we will fix this");
+                  this.toastr.error('We are working on fixing this!', 'Server error occurred.')
                 }, () => {
                   this.spinnerService.hide()
                 }

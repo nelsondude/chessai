@@ -3,6 +3,9 @@
 @import "variables";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+// regular style toast
+@import '~ngx-toastr/toastr.css';
+
 button:hover, a:hover {
   cursor: pointer;
 }
