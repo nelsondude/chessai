@@ -12,7 +12,7 @@ export class ControlsComponent {
   levels = ["Horrible", "Beginner", "Amateur", "Expert"];
   options: Options = {
     floor: 1,
-    ceil: 4,
+    ceil: 3,
     showTicks: true,
     ticksTooltip: (v: number): string => {
       return this.levels[v];
