@@ -22,7 +22,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const mongoUri = process.env.MONGO_URI || `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@ds155577.mlab.com:55577/saynplay`;
 
-MongoClient.connect(mongoUri, (err, client) => {
+MongoClient.connect(mongoUri, { useNewUrlParser: true }, (err, client) => {
   if (err) return console.log(err);
   db = client.db('saynplay');
 
