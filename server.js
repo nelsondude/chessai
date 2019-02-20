@@ -3,15 +3,21 @@ require('dotenv').config();
 
 const path = require('path');
 const express = require('express');
+var sslRedirect = require('heroku-ssl-redirect');
 const app = express();
 
 const { createChessBoard }  = require('./js/Chess');
 
-// API Config
+
+// enable ssl redirect
+if (process.env.NODE_ENV === 'production') {
+  console.log('in production now');
+  app.use(sslRedirect());
+} else {
+  console.log('not in production');
+}
 
 app.use(express.static(path.join(__dirname, '/dist')));
-
-
 
 
 // Socket / Mongo Config

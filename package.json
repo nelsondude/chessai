@@ -50,6 +50,7 @@
     "express": "^4.16.2",
     "express-livereload": "0.0.24",
     "gulp-wait": "0.0.2",
+    "heroku-ssl-redirect": "0.0.4",
     "mongodb": "^3.0.1",
     "mongoose": "^5.0.0",
     "ng2-device-detector": "^1.0.0",
