@@ -47,7 +47,7 @@
     "core-js": "^2.4.1",
     "dotenv": "^6.0.0",
     "drag-controls-adv": "^1.0.7",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "express-livereload": "0.0.24",
     "gulp-wait": "0.0.2",
     "heroku-ssl-redirect": "0.0.4",
